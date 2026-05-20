@@ -1098,30 +1098,17 @@
       <h2>Prochains rendez-vous.</h2>
       <p>Des soirées, des cultes, des moments d'évangélisation — là où vous êtes, ou là où nous sommes envoyés.</p>
     </div>
-    <div class="events-grid">
-      <div class="event-card reveal">
-        <div class="event-date"><span class="day">12</span><span class="mon">Juin 2026</span></div>
-        <div class="event-info"><h4>Holy Disco</h4><p>22:00 · Soirée louange & gospel · Genève</p></div>
-        <div class="event-arrow">→</div>
-      </div>
-      <div class="event-card reveal" style="transition-delay: .08s">
-        <div class="event-date"><span class="day">10</span><span class="mon">Avr 2026</span></div>
-        <div class="event-info"><h4>Évangélisation Dakar</h4><p>00:00 · Mission internationale · Sénégal</p></div>
-        <div class="event-arrow">→</div>
-      </div>
-      <div class="event-card reveal" style="transition-delay: .16s">
-        <div class="event-date"><span class="day">01</span><span class="mon">Mar 2026</span></div>
-        <div class="event-info"><h4>Culte Protestant</h4><p>17:00 · Adoration & enseignement</p></div>
-        <div class="event-arrow">→</div>
-      </div>
-      <div class="event-card reveal" style="transition-delay: .24s">
-        <div class="event-date"><span class="day">21</span><span class="mon">Fév 2026</span></div>
-        <div class="event-info"><h4>Gospel Night</h4><p>20:00 · Concert chorale · Genève</p></div>
-        <div class="event-arrow">→</div>
-      </div>
+    <div class="events-grid" id="eventsGrid">
+      <!-- Cartes générées dynamiquement depuis Supabase -->
     </div>
+    <p id="eventsEmpty" class="reveal" style="display:none; text-align:center; padding: 60px 20px; font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--ink-soft);">
+      Aucun événement à venir pour le moment.
+    </p>
     <div style="text-align:center; margin-top:60px;" class="reveal">
-      <a href="#" class="btn btn-ghost">Voir tous les événements <span class="btn-arrow">→</span></a>
+      <a href="#" id="loadAllEventsBtn" class="btn btn-ghost" data-state="initial" style="display:none;">
+        <span class="btn-label">Voir tous les événements</span>
+        <span class="btn-arrow">→</span>
+      </a>
     </div>
   </div>
 </section>
@@ -1140,7 +1127,6 @@
       <button class="filter-btn active" data-filter="all">Tout <span class="count" data-count="all"></span></button>
       <button class="filter-btn" data-filter="evangelisation">Évangélisation <span class="count" data-count="evangelisation"></span></button>
       <button class="filter-btn" data-filter="priere">Groupe de prière <span class="count" data-count="priere"></span></button>
-      <button class="filter-btn" data-filter="soins">Soins d'âme <span class="count" data-count="soins"></span></button>
       <button class="filter-btn" data-filter="culte">Culte protestant <span class="count" data-count="culte"></span></button>
       <button class="filter-btn" data-filter="gospel-night">Gospel Night <span class="count" data-count="gospel-night"></span></button>
       <button class="filter-btn" data-filter="atelier">Atelier Gospel <span class="count" data-count="atelier"></span></button>
@@ -1276,84 +1262,113 @@
 
 <script>
   /* ============================
-     GALLERY DATA
+     GALLERY + EVENTS DATA — chargées depuis Supabase au runtime
      ============================ */
-  const galleryItems = [
-    // Évangélisation
-    { cat: 'evangelisation', catLabel: 'Évangélisation', title: 'Mission Dakar 2026', size: 'large', type: 'video', img: 'https://images.unsplash.com/photo-1504805572947-34fad45aed93?auto=format&fit=crop&w=1200&q=80' },
-    { cat: 'evangelisation', catLabel: 'Évangélisation', title: 'Sortie de quartier · Pâquis', size: 'tall', type: 'photo', img: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=80' },
-    { cat: 'evangelisation', catLabel: 'Évangélisation', title: 'Rencontres de rue', size: 'square', type: 'photo', img: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=900&q=80' },
+  let galleryItems = [];        // rempli par loadFromSupabase()
+  let eventItemsAll = [];       // tous les events futurs publiés
+  let eventsShownAll = false;   // état du bouton "Voir tous"
 
-    // Groupe de prière
-    { cat: 'priere', catLabel: 'Groupe de prière', title: 'Veillée de jeudi soir', size: 'wide', type: 'photo', img: 'https://images.unsplash.com/photo-1545239351-cefa43af60f3?auto=format&fit=crop&w=1200&q=80' },
-    { cat: 'priere', catLabel: 'Groupe de prière', title: 'Mains jointes', size: 'square', type: 'photo', img: 'https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=900&q=80' },
-    { cat: 'priere', catLabel: 'Groupe de prière', title: 'Prière silencieuse', size: 'tall', type: 'video', img: 'https://images.unsplash.com/photo-1490127252417-7c393f993ee4?auto=format&fit=crop&w=900&q=80' },
+  // Labels FR des 5 catégories de la galerie
+  const CATEGORY_LABELS = {
+    evangelisation: 'Évangélisation',
+    priere:         'Groupe de prière',
+    culte:          'Culte protestant',
+    'gospel-night': 'Gospel Night',
+    atelier:        'Atelier Gospel'
+  };
 
-    // Soins d'âme
-    { cat: 'soins', catLabel: "Soins d'âme", title: "Écoute pastorale", size: 'tall', type: 'photo', img: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?auto=format&fit=crop&w=900&q=80' },
-    { cat: 'soins', catLabel: "Soins d'âme", title: 'Accompagnement individuel', size: 'wide', type: 'photo', img: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=80' },
-    { cat: 'soins', catLabel: "Soins d'âme", title: 'Témoignages partagés', size: 'square', type: 'video', img: 'https://images.unsplash.com/photo-1573497019418-b400bb3ab074?auto=format&fit=crop&w=900&q=80' },
-
-    // Culte protestant
-    { cat: 'culte', catLabel: 'Culte protestant', title: 'Culte du 1er mars', size: 'large', type: 'photo', img: 'https://images.unsplash.com/photo-1438032005730-c779502df39b?auto=format&fit=crop&w=1200&q=80' },
-    { cat: 'culte', catLabel: 'Culte protestant', title: 'Adoration matinale', size: 'tall', type: 'video', img: 'https://images.unsplash.com/photo-1519834022362-8c4a8c1e8a3e?auto=format&fit=crop&w=900&q=80' },
-    { cat: 'culte', catLabel: 'Culte protestant', title: 'Lecture de la Parole', size: 'square', type: 'photo', img: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=900&q=80' },
-
-    // Gospel Night
-    { cat: 'gospel-night', catLabel: 'Gospel Night', title: 'Gospel Night · Février 2026', size: 'wide', type: 'video', img: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1200&q=80' },
-    { cat: 'gospel-night', catLabel: 'Gospel Night', title: 'Chorale en lumière', size: 'tall', type: 'photo', img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=900&q=80' },
-    { cat: 'gospel-night', catLabel: 'Gospel Night', title: 'Public en louange', size: 'square', type: 'photo', img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=900&q=80' },
-    { cat: 'gospel-night', catLabel: 'Gospel Night', title: 'Solo · gospel', size: 'square', type: 'video', img: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=900&q=80' },
-
-    // Atelier Gospel
-    { cat: 'atelier', catLabel: 'Atelier Gospel', title: 'Répétition de chœur', size: 'large', type: 'photo', img: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=1200&q=80' },
-    { cat: 'atelier', catLabel: 'Atelier Gospel', title: 'Coaching vocal', size: 'tall', type: 'video', img: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&q=80' },
-    { cat: 'atelier', catLabel: 'Atelier Gospel', title: 'Atelier rythmique', size: 'square', type: 'photo', img: 'https://images.unsplash.com/photo-1485579149621-3123dd979885?auto=format&fit=crop&w=900&q=80' }
-  ];
-
-  /* ============================
-     RENDER GALLERY
-     ============================ */
-  const grid = document.getElementById('galleryGrid');
+  // Gradients de fallback si une image ne charge pas
   const gradients = {
     evangelisation: 'linear-gradient(135deg, #b8924a, #6b2424)',
     priere:         'linear-gradient(135deg, #1a2046, #b8924a)',
-    soins:          'linear-gradient(135deg, #2a2f4a, #8a6a2e)',
     culte:          'linear-gradient(135deg, #11162b, #b8924a)',
     'gospel-night': 'linear-gradient(135deg, #6b2424, #11162b)',
     atelier:        'linear-gradient(135deg, #b8924a, #1a2046)'
   };
 
-  galleryItems.forEach((item, i) => {
-    const el = document.createElement('div');
-    el.className = `gallery-item size-${item.size} reveal`;
-    el.dataset.cat = item.cat;
-    el.style.transitionDelay = `${(i % 6) * 0.06}s`;
-    el.innerHTML = `
-      <img src="${item.img}" alt="${item.title}"
-           onerror="this.style.display='none'; this.parentElement.style.background='${gradients[item.cat]}';" />
-      ${item.type === 'video' ? `
-        <div class="play-icon">
-          <svg viewBox="0 0 12 14"><path d="M0 0v14l12-7z"/></svg>
-        </div>` : ''}
-      <div class="item-overlay">
-        <span class="item-cat">${item.catLabel}</span>
-        <span class="item-title">${item.title}</span>
-      </div>
-    `;
-    el.addEventListener('click', () => openLightbox(item));
-    grid.appendChild(el);
-  });
+  // Mois courts en français (sans dépendre de la locale du navigateur)
+  const MONTH_FR_SHORT = ['Jan','Fév','Mars','Avr','Mai','Juin','Juil','Août','Sept','Oct','Nov','Déc'];
+
+  const grid = document.getElementById('galleryGrid');
+  const eventsGrid = document.getElementById('eventsGrid');
+  const eventsEmpty = document.getElementById('eventsEmpty');
+  const loadAllBtn = document.getElementById('loadAllEventsBtn');
+
+  /* ============================
+     RENDER GALLERY
+     ============================ */
+  function renderGallery(items) {
+    if (!grid) return;
+    grid.innerHTML = '';
+    const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+    items.forEach((item, i) => {
+      const el = document.createElement('div');
+      el.className = `gallery-item size-${item.size} reveal in`;
+      el.dataset.cat = item.cat;
+      el.style.transitionDelay = `${(i % 6) * 0.06}s`;
+      if (activeFilter !== 'all' && item.cat !== activeFilter) {
+        el.classList.add('hidden');
+      }
+      el.innerHTML = `
+        <img src="${item.img}" alt="${item.title}"
+             onerror="this.style.display='none'; this.parentElement.style.background='${gradients[item.cat] || gradients.evangelisation}';" />
+        ${item.type === 'video' ? `
+          <div class="play-icon">
+            <svg viewBox="0 0 12 14"><path d="M0 0v14l12-7z"/></svg>
+          </div>` : ''}
+        <div class="item-overlay">
+          <span class="item-cat">${item.catLabel}</span>
+          <span class="item-title">${item.title || ''}</span>
+        </div>
+      `;
+      el.addEventListener('click', () => openLightbox(item));
+      grid.appendChild(el);
+    });
+  }
+
+  /* ============================
+     RENDER EVENTS
+     ============================ */
+  function renderEvents(items) {
+    if (!eventsGrid) return;
+    eventsGrid.innerHTML = '';
+    if (items.length === 0) {
+      if (eventsEmpty) eventsEmpty.style.display = 'block';
+      return;
+    }
+    if (eventsEmpty) eventsEmpty.style.display = 'none';
+    items.forEach((event, i) => {
+      const d = new Date(event.date);
+      const day = String(d.getDate()).padStart(2, '0');
+      const mon = `${MONTH_FR_SHORT[d.getMonth()]} ${d.getFullYear()}`;
+      const time = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+      const parts = [time];
+      if (event.location) parts.push(event.location);
+      if (event.category) parts.push(event.category);
+
+      const card = document.createElement('div');
+      card.className = 'event-card reveal in';
+      card.style.transitionDelay = `${(i % 4) * 0.08}s`;
+      card.innerHTML = `
+        <div class="event-date"><span class="day">${day}</span><span class="mon">${mon}</span></div>
+        <div class="event-info"><h4>${event.title}</h4><p>${parts.join(' · ')}</p></div>
+        <div class="event-arrow">→</div>
+      `;
+      eventsGrid.appendChild(card);
+    });
+  }
 
   /* ============================
      COUNTS
      ============================ */
-  document.querySelectorAll('[data-count]').forEach(el => {
-    const c = el.dataset.count;
-    el.textContent = c === 'all'
-      ? galleryItems.length
-      : galleryItems.filter(x => x.cat === c).length;
-  });
+  function updateCounts(items) {
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const c = el.dataset.count;
+      el.textContent = c === 'all'
+        ? items.length
+        : items.filter(x => x.cat === c).length;
+    });
+  }
 
   /* ============================
      FILTER
@@ -1413,6 +1428,106 @@
   }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ============================
+     SUPABASE : chargement des données réelles
+     ============================ */
+  const SUPABASE_URL = 'https://eppxcrlppxcktotqnkjp.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_Ret1opucP7rF1qjO6zICUQ_XXEAvJMO';
+
+  function showInitialEventsSlice() {
+    const slice = eventItemsAll.slice(0, 4);
+    renderEvents(slice);
+    if (loadAllBtn) {
+      const labelEl = loadAllBtn.querySelector('.btn-label');
+      if (eventItemsAll.length > 4) {
+        loadAllBtn.style.display = 'inline-flex';
+        if (labelEl) labelEl.textContent = 'Voir tous les événements';
+      } else {
+        loadAllBtn.style.display = 'none';
+      }
+    }
+    eventsShownAll = false;
+  }
+
+  function showAllEvents() {
+    renderEvents(eventItemsAll);
+    if (loadAllBtn) {
+      const labelEl = loadAllBtn.querySelector('.btn-label');
+      if (labelEl) labelEl.textContent = 'Voir moins';
+    }
+    eventsShownAll = true;
+  }
+
+  loadAllBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (eventsShownAll) {
+      showInitialEventsSlice();
+      // Garde l'utilisateur près de la section events
+      document.getElementById('events')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      showAllEvents();
+    }
+  });
+
+  function showGalleryError() {
+    if (!grid) return;
+    grid.innerHTML = `
+      <div style="grid-column: 1 / -1; padding: 60px 20px; text-align: center;">
+        <p style="font-family: var(--serif); font-style: italic; font-size: 18px; color: rgba(245,236,217,.6);">
+          Galerie momentanément indisponible.
+        </p>
+      </div>
+    `;
+  }
+
+  (async function loadFromSupabase() {
+    try {
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+      const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+      const nowIso = new Date().toISOString();
+
+      const [eventsRes, mediaRes] = await Promise.all([
+        supabase
+          .from('events')
+          .select('*')
+          .eq('is_published', true)
+          .gte('date', nowIso)
+          .order('date', { ascending: true }),
+        supabase
+          .from('media')
+          .select('*')
+          .order('display_order', { ascending: true })
+      ]);
+
+      if (eventsRes.error) console.warn('[Supabase] events:', eventsRes.error.message);
+      if (mediaRes.error)  console.warn('[Supabase] media:',  mediaRes.error.message);
+
+      // Events
+      eventItemsAll = eventsRes.data || [];
+      showInitialEventsSlice();
+
+      // Gallery
+      galleryItems = (mediaRes.data || []).map(m => ({
+        cat: m.category,
+        catLabel: CATEGORY_LABELS[m.category] || m.category,
+        title: m.title || '',
+        size: m.size_hint || 'square',
+        type: m.type || 'photo',
+        img: m.src_url,
+        poster: m.poster_url || null,
+      }));
+      renderGallery(galleryItems);
+      updateCounts(galleryItems);
+    } catch (err) {
+      console.error('[Supabase] erreur de chargement:', err);
+      showGalleryError();
+      // Pour les events : on laisse simplement vide + message "aucun événement"
+      eventItemsAll = [];
+      showInitialEventsSlice();
+    }
+  })();
 
   /* ============================
      HERO : scrollytelling vidéo
