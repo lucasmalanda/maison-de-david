@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+/* Palette éditoriale reprise du site public */
+@theme {
+  --color-cream: #f5ecd9;
+  --color-cream-deep: #ebe0c5;
+  --color-parchment: #fdf8ec;
+  --color-ink: #11162b;
+  --color-ink-soft: #2a2f4a;
+  --color-gold: #b8924a;
+  --color-gold-deep: #8a6a2e;
+  --color-burgundy: #6b2424;
+
+  --color-line: rgba(17, 22, 43, 0.14);
+  --color-line-strong: rgba(17, 22, 43, 0.28);
+
+  --font-sans: var(--font-manrope), -apple-system, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), "Times New Roman", serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-cream);
+  color: var(--color-ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.font-display {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+}
