@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function Home() {
@@ -51,9 +52,17 @@ export default async function Home() {
             <p className="mt-1 font-mono text-xs">{errorMessage}</p>
           </div>
         ) : (
-          <p className="mt-8 text-xs uppercase tracking-widest text-gold-deep">
-            Étape 2 terminée ✓
-          </p>
+          <>
+            <Link
+              href="/login"
+              className="mt-10 inline-block rounded-md bg-ink px-6 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-cream transition hover:bg-gold-deep"
+            >
+              Accéder au dashboard →
+            </Link>
+            <p className="mt-6 text-xs uppercase tracking-widest text-gold-deep">
+              Étape 2 ✓
+            </p>
+          </>
         )}
       </div>
     </main>
