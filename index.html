@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>La Maison de David — Genève</title>
+<meta name="description" content="Association chrétienne basée à Genève. Louange, prière et présence de Dieu en chaque lieu fragilisé." />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  /* ---------- Tokens ---------- */
+  :root {
+    --cream: #f5ecd9;
+    --cream-deep: #ebe0c5;
+    --parchment: #fdf8ec;
+    --ink: #11162b;
+    --ink-soft: #2a2f4a;
+    --gold: #b8924a;
+    --gold-deep: #8a6a2e;
+    --burgundy: #6b2424;
+    --line: rgba(17, 22, 43, 0.14);
+    --line-strong: rgba(17, 22, 43, 0.28);
+
+    --serif: "Fraunces", "Times New Roman", serif;
+    --sans: "Manrope", -apple-system, system-ui, sans-serif;
+
+    --r-sm: 4px;
+    --r-md: 10px;
+    --r-lg: 22px;
+
+    --container: 1240px;
+
+    --ease: cubic-bezier(.2,.7,.2,1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.55;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Subtle paper grain */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.07  0 0 0 0 0.05  0 0 0 0 0.03  0 0 0 0.18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+
+  .container { max-width: var(--container); margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
+
+  /* ---------- Headings ---------- */
+  h1, h2, h3, h4 { font-family: var(--serif); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; }
+  .display { font-family: var(--serif); font-weight: 300; font-style: italic; }
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--gold-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--gold); }
+
+  /* ---------- Header ---------- */
+  header.nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    color: var(--cream);
+    transition: backdrop-filter .3s var(--ease), background .3s var(--ease), border-color .3s var(--ease), color .3s var(--ease);
+    border-bottom: 1px solid transparent;
+  }
+  header.nav.scrolled {
+    background: rgba(245, 236, 217, 0.92);
+    backdrop-filter: saturate(140%) blur(14px);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    border-bottom-color: var(--line);
+    color: var(--ink);
+  }
+  header.nav .brand-mark {
+    transition: background .3s var(--ease);
+  }
+  header.nav.scrolled .brand-mark {
+    box-shadow: 0 2px 0 rgba(17,22,43,.2), inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 14px;
+    font-family: var(--serif);
+    font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+  .brand-mark {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--gold) 0%, var(--gold-deep) 65%, var(--ink) 100%);
+    display: grid; place-items: center;
+    color: var(--cream);
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 20px;
+    box-shadow: 0 2px 0 rgba(17,22,43,.2), inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .brand strong { font-weight: 400; }
+  .brand small {
+    display: block;
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    color: var(--gold-deep);
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+  nav ul {
+    display: flex; gap: 36px; list-style: none;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  nav ul a { position: relative; padding: 4px 0; }
+  nav ul a::after {
+    content: "";
+    position: absolute; left: 0; bottom: -2px;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width .3s var(--ease);
+  }
+  nav ul a:hover::after { width: 100%; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 13px 22px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    transition: transform .25s var(--ease), background .25s var(--ease), color .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .btn-primary:hover {
+    background: var(--gold-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px -10px rgba(17,22,43,.45);
+  }
+  .btn-ghost {
+    border: 1px solid var(--ink);
+    color: var(--ink);
+  }
+  .btn-ghost:hover { background: var(--ink); color: var(--cream); }
+  .btn-arrow { transition: transform .3s var(--ease); }
+  .btn:hover .btn-arrow { transform: translateX(4px); }
+
+  .menu-toggle { display: none; }
+
+  /* ---------- Hero (vidéo scrollytelling) ---------- */
+  .hero {
+    position: relative;
+    height: 220vh;  /* zone de scroll longue pour le scrollytelling */
+    padding: 0;
+    overflow: visible;
+    color: var(--cream);
+  }
+  .hero-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background: var(--ink);
+  }
+
+  /* Les deux vidéos superposées */
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    transition: opacity .8s ease;
+  }
+  /* Par défaut : invisibles jusqu'à ce qu'elles soient chargées */
+  .hero-video.is-intro { opacity: 0; }
+  .hero-video.is-intro.is-loaded { opacity: 1; }
+  .hero-video.is-loop { opacity: 0; }
+  .hero-video.is-loop.is-active { opacity: 1; }
+  .hero-video.is-intro.is-faded { opacity: 0; }
+
+  /* Pendant le chargement : un fond bleu nuit + une lueur dorée subtile */
+  .hero-sticky::before {
+    content: "";
+    position: absolute; inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse at center 30%, rgba(184,146,74,.08), transparent 60%),
+      var(--ink);
+    transition: opacity 1.2s ease;
+    pointer-events: none;
+  }
+  .hero-sticky.is-video-loaded::before { opacity: 0; }
+
+  /* Image fallback (hero.avif) — affichée tant que la vidéo n'est pas chargée */
+  .hero-poster {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    background-image: url("hero.avif");
+    background-size: cover;
+    background-position: center 30%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .hero.no-video .hero-poster { opacity: 1; z-index: 1; }
+
+  /* Voile dégradé en bas pour la lisibilité */
+  .hero-veil {
+    position: absolute; inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg,
+      rgba(17,22,43,0) 0%,
+      rgba(17,22,43,0) 55%,
+      rgba(17,22,43,.55) 78%,
+      rgba(17,22,43,.92) 100%);
+    pointer-events: none;
+  }
+
+  /* Bloc de bienvenue — affiché tout au début, disparaît dès qu'on scrolle */
+  .hero-welcome {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.2s ease, transform 1.2s ease;
+  }
+  /* Apparait quand la vidéo est chargée ET qu'on est au tout début */
+  .hero.is-step-0 .hero-welcome { opacity: 1; transform: translate(-50%, -50%); }
+  /* Disparait dès qu'on commence à scroller (step 1+) */
+  .hero.is-step-1 .hero-welcome,
+  .hero.is-step-2 .hero-welcome,
+  .hero.is-step-3 .hero-welcome {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 30px));
+  }
+  .hero-welcome .greet {
+    display: block;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(56px, 8vw, 120px);
+    line-height: 1;
+    color: var(--cream);
+    text-shadow:
+      0 4px 50px rgba(0,0,0,.9),
+      0 2px 20px rgba(0,0,0,.85),
+      0 0 80px rgba(184,146,74,.35);
+    letter-spacing: -0.02em;
+    margin-bottom: 22px;
+    animation: welcomeBreath 5s ease-in-out infinite;
+  }
+  .hero-welcome .greet em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 300;
+  }
+  .hero-welcome .sub {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 14px;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    padding: 10px 70px;
+    position: relative;
+    text-shadow: 0 2px 16px rgba(0,0,0,.8), 0 0 24px rgba(0,0,0,.6);
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(17,22,43,.55) 20%,
+      rgba(17,22,43,.55) 80%,
+      transparent 100%);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+  .hero-welcome .sub::before {
+    content: "";
+    position: absolute;
+    left: 16px; top: 50%;
+    width: 44px; height: 1.5px;
+    background: var(--gold);
+    box-shadow: 0 0 8px rgba(184,146,74,.6);
+  }
+  .hero-welcome .sub::after {
+    content: "";
+    position: absolute;
+    right: 16px; top: 50%;
+    width: 44px; height: 1.5px;
+    background: var(--gold);
+    box-shadow: 0 0 8px rgba(184,146,74,.6);
+  }
+
+  /* Respiration douce du mot de bienvenue */
+  @keyframes welcomeBreath {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%      { transform: scale(1.015); opacity: 0.92; }
+  }
+
+  @media (max-width: 768px) {
+    .hero-welcome { top: 38%; width: calc(100% - 44px); }
+    .hero-welcome .sub {
+      font-size: 11px;
+      padding: 8px 50px;
+      letter-spacing: 0.35em;
+    }
+    .hero-welcome .sub::before,
+    .hero-welcome .sub::after { width: 28px; }
+    .hero-welcome .sub::before { left: 12px; }
+    .hero-welcome .sub::after { right: 12px; }
+  }
+
+  /* Bloc texte — séquencé par le scroll */
+  .hero-content {
+    position: absolute;
+    left: 50%;
+    bottom: 60px;
+    transform: translateX(-50%);
+    max-width: 760px;
+    width: calc(100% - 56px);
+    text-align: center;
+    z-index: 2;
+  }
+
+  .hero .eyebrow {
+    color: var(--gold);
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .8s ease, transform .8s ease;
+  }
+  .hero .eyebrow::before { background: var(--gold); }
+  .hero.is-step-1 .eyebrow,
+  .hero.is-step-2 .eyebrow,
+  .hero.is-step-3 .eyebrow { opacity: 1; transform: translateY(0); }
+
+  .hero h1 {
+    font-size: clamp(38px, 5.2vw, 76px);
+    line-height: 1.05;
+    margin: 24px 0;
+    color: var(--cream);
+    text-shadow: 0 2px 30px rgba(0,0,0,.7);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s ease .15s, transform 1s ease .15s;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 300;
+  }
+  .hero.is-step-1 h1,
+  .hero.is-step-2 h1,
+  .hero.is-step-3 h1 { opacity: 1; transform: translateY(0); }
+
+  .hero-quote {
+    border: 0;
+    padding: 0;
+    max-width: 580px;
+    margin: 0 auto 28px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.55;
+    color: rgba(245,236,217,.95);
+    text-shadow: 0 1px 16px rgba(0,0,0,.7);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s ease .3s, transform 1s ease .3s;
+  }
+  .hero-quote::before, .hero-quote::after {
+    content: "✦";
+    display: block;
+    color: var(--gold);
+    font-style: normal;
+    font-size: 10px;
+    margin: 0 auto 14px;
+    opacity: 0.7;
+  }
+  .hero-quote::after { margin: 14px auto 0; }
+  .hero-quote cite {
+    display: block; font-style: normal;
+    font-family: var(--sans); font-size: 11px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-top: 12px; font-weight: 600;
+  }
+  .hero.is-step-2 .hero-quote,
+  .hero.is-step-3 .hero-quote { opacity: 1; transform: translateY(0); }
+
+  .hero-cta {
+    display: flex; gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s ease .45s, transform 1s ease .45s;
+  }
+  .hero.is-step-3 .hero-cta { opacity: 1; transform: translateY(0); }
+
+  .hero .btn-ghost {
+    border-color: rgba(245,236,217,.6);
+    color: var(--cream);
+    backdrop-filter: blur(4px);
+    background: rgba(245,236,217,.06);
+  }
+  .hero .btn-ghost:hover {
+    background: var(--cream);
+    color: var(--ink);
+  }
+  .hero .btn-primary {
+    background: var(--gold);
+    color: var(--ink);
+  }
+  .hero .btn-primary:hover {
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  /* Indicateur scroll */
+  .scroll-cue {
+    position: absolute;
+    bottom: 24px; right: 28px;
+    color: var(--cream);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    z-index: 3;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    animation: bob 2.4s ease-in-out infinite;
+    pointer-events: none;
+    transition: opacity .5s ease;
+  }
+  .scroll-cue::after {
+    content: ""; width: 1px; height: 22px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+  .hero.is-step-3 .scroll-cue { opacity: 0; }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+
+  /* ---- Mobile ---- */
+  @media (max-width: 768px) {
+    .hero {
+      height: 200vh;
+    }
+    .hero-poster {
+      background-position: center center;
+    }
+    .hero-content {
+      bottom: 40px;
+      width: calc(100% - 44px);
+      text-align: left;
+    }
+    .hero .eyebrow { justify-content: flex-start; }
+    .hero h1 {
+      font-size: clamp(38px, 11vw, 56px);
+      margin-bottom: 24px;
+    }
+    .hero-quote {
+      font-size: 15px;
+      margin-bottom: 28px;
+      text-align: left;
+      border-left: 1px solid rgba(245,236,217,.4);
+      padding-left: 18px;
+      max-width: 100%;
+    }
+    .hero-quote::before, .hero-quote::after { display: none; }
+    .hero-cta {
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+    }
+    .hero-cta .btn { width: 100%; justify-content: center; }
+    .scroll-cue { display: none; }
+  }
+
+  /* Accessibilité : utilisateurs avec préférence "réduire les mouvements" */
+  @media (prefers-reduced-motion: reduce) {
+    .hero { height: 100vh; }
+    .hero-video { display: none !important; }
+    .hero-poster { opacity: 1 !important; z-index: 1 !important; }
+    .hero .eyebrow, .hero h1, .hero-quote, .hero-cta {
+      opacity: 1 !important; transform: none !important;
+    }
+  }
+
+  /* Marquee */
+  .marquee {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--parchment);
+    overflow: hidden;
+    position: relative;
+    z-index: 2;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 60px;
+    padding: 18px 0;
+    width: max-content;
+    animation: scroll 40s linear infinite;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .marquee-track span { display: inline-flex; align-items: center; gap: 60px; }
+  .marquee-track span::after { content: "✦"; color: var(--gold); font-style: normal; font-size: 14px; }
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ---------- Sections ---------- */
+  section { padding: 120px 0; position: relative; z-index: 2; }
+  .section-head { max-width: 760px; margin-bottom: 70px; }
+  .section-head h2 { font-size: clamp(36px, 5vw, 64px); margin-top: 18px; }
+  .section-head p { margin-top: 22px; font-size: 17px; color: var(--ink-soft); max-width: 560px; }
+
+  /* Mission */
+  .mission {
+    background: var(--parchment);
+  }
+  .mission-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 30px;
+    align-items: stretch;
+  }
+  .mission-text { grid-column: span 7; }
+  .mission-text h2 { font-size: clamp(38px, 5vw, 68px); margin-bottom: 30px; }
+  .mission-text h2 em { font-style: italic; color: var(--gold-deep); }
+  .mission-text p { font-size: 18px; color: var(--ink-soft); max-width: 580px; margin-bottom: 18px; }
+  .mission-pillars {
+    grid-column: span 5;
+    display: flex; flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .pillar {
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+    display: grid; grid-template-columns: 40px 1fr; gap: 16px;
+    align-items: start;
+  }
+  .pillar-num {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--gold-deep);
+    font-size: 22px;
+  }
+  .pillar h4 { font-family: var(--serif); font-size: 22px; font-weight: 400; margin-bottom: 4px; }
+  .pillar p { font-size: 14px; color: var(--ink-soft); }
+
+  /* ---------- Gallery (the star feature) ---------- */
+  .gallery { background: var(--ink); color: var(--cream); padding: 140px 0; }
+  .gallery .eyebrow { color: var(--gold); }
+  .gallery .eyebrow::before { background: var(--gold); }
+  .gallery h2 { color: var(--cream); font-size: clamp(38px, 5.5vw, 72px); }
+  .gallery .section-head p { color: rgba(245,236,217,.7); }
+
+  .filter-bar {
+    display: flex; flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 46px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(245,236,217,.12);
+    align-items: center;
+  }
+  .filter-label {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-right: 14px;
+    font-weight: 600;
+  }
+  .filter-btn {
+    padding: 9px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(245,236,217,.2);
+    color: rgba(245,236,217,.78);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: all .25s var(--ease);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .filter-btn .count {
+    font-size: 10px;
+    background: rgba(245,236,217,.1);
+    padding: 2px 7px;
+    border-radius: 99px;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  .filter-btn:hover { color: var(--cream); border-color: var(--gold); }
+  .filter-btn.active {
+    background: var(--gold);
+    color: var(--ink);
+    border-color: var(--gold);
+  }
+  .filter-btn.active .count { background: rgba(17,22,43,.18); color: var(--ink); }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 16px;
+    grid-auto-flow: dense;
+  }
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform .5s var(--ease), opacity .4s var(--ease);
+    background: #0a0e1c;
+  }
+  .gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .8s var(--ease), filter .5s var(--ease);
+    filter: brightness(0.9) contrast(1.05);
+  }
+  .gallery-item:hover img {
+    transform: scale(1.05);
+    filter: brightness(1.05) contrast(1.05);
+  }
+  .gallery-item .item-overlay {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 22px 20px 18px;
+    background: linear-gradient(to top, rgba(10,14,28,.95) 0%, rgba(10,14,28,.55) 60%, transparent 100%);
+    display: flex; flex-direction: column; gap: 4px;
+    transform: translateY(8px);
+    opacity: 0.9;
+    transition: transform .35s var(--ease), opacity .35s var(--ease);
+  }
+  .gallery-item:hover .item-overlay { transform: translateY(0); opacity: 1; }
+  .item-cat {
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .item-title { font-family: var(--serif); font-size: 19px; line-height: 1.2; color: var(--cream); }
+  .play-icon {
+    position: absolute; top: 16px; right: 16px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(245,236,217,.95);
+    display: grid; place-items: center;
+    color: var(--ink);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 6px 16px rgba(0,0,0,.3);
+    transition: transform .3s var(--ease);
+  }
+  .gallery-item:hover .play-icon { transform: scale(1.08); }
+  .play-icon svg { width: 16px; height: 16px; margin-left: 2px; fill: var(--ink); }
+
+  /* Sizing presets — masonry-like via grid spans */
+  .gallery-item.size-tall   { grid-column: span 4; aspect-ratio: 3/4; }
+  .gallery-item.size-wide   { grid-column: span 6; aspect-ratio: 16/10; }
+  .gallery-item.size-square { grid-column: span 4; aspect-ratio: 1/1; }
+  .gallery-item.size-large  { grid-column: span 8; aspect-ratio: 4/3; }
+  .gallery-item.hidden { display: none; }
+
+  /* ---------- Events ---------- */
+  .events { background: var(--cream); }
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .event-card {
+    padding: 36px 28px;
+    border-bottom: 1px solid var(--line-strong);
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 24px;
+    align-items: center;
+    transition: background .3s var(--ease);
+    cursor: pointer;
+  }
+  .event-card:nth-child(odd) { border-right: 1px solid var(--line-strong); }
+  .event-card:hover { background: var(--parchment); }
+  .event-date {
+    font-family: var(--serif);
+    text-align: center;
+    color: var(--gold-deep);
+  }
+  .event-date .day { font-size: 44px; line-height: 1; font-weight: 300; }
+  .event-date .mon { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; font-weight: 600; font-family: var(--sans); display: block; margin-top: 6px; color: var(--ink); }
+  .event-info h4 { font-family: var(--serif); font-size: 26px; font-weight: 400; margin-bottom: 4px; }
+  .event-info p { font-size: 13px; color: var(--ink-soft); }
+  .event-arrow {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    display: grid; place-items: center;
+    transition: all .3s var(--ease);
+  }
+  .event-card:hover .event-arrow {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+    transform: rotate(-45deg);
+  }
+
+  /* ---------- Donate banner ---------- */
+  .donate-banner {
+    background: linear-gradient(135deg, var(--ink) 0%, #1a2046 100%);
+    color: var(--cream);
+    padding: 100px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .donate-banner::before {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(800px 400px at 20% 0%, rgba(184,146,74,.25), transparent 60%),
+      radial-gradient(800px 400px at 80% 100%, rgba(184,146,74,.15), transparent 60%);
+  }
+  .donate-banner h2 {
+    font-size: clamp(38px, 6vw, 80px);
+    margin-bottom: 20px;
+    font-style: italic;
+    font-weight: 300;
+  }
+  .donate-banner h2 em { font-style: normal; color: var(--gold); }
+  .donate-banner p {
+    max-width: 540px; margin: 0 auto 36px;
+    color: rgba(245,236,217,.75);
+    font-size: 17px;
+  }
+  .donate-banner .btn-primary {
+    background: var(--gold);
+    color: var(--ink);
+  }
+  .donate-banner .btn-primary:hover {
+    background: var(--cream);
+  }
+
+  /* ---------- Contact ---------- */
+  .contact { background: var(--parchment); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: start; }
+  .contact-info h2 { font-size: clamp(38px, 5vw, 60px); margin-bottom: 24px; }
+  .contact-info p { color: var(--ink-soft); font-size: 17px; max-width: 380px; margin-bottom: 36px; }
+  .contact-detail { display: flex; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--line); align-items: flex-start; }
+  .contact-detail svg { flex-shrink: 0; color: var(--gold-deep); margin-top: 2px; }
+  .contact-detail strong { display: block; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+  .contact-detail span { color: var(--ink-soft); font-size: 15px; }
+
+  form .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  form .form-field { position: relative; margin-bottom: 16px; }
+  form input, form textarea {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line-strong);
+    padding: 18px 0 14px;
+    font: inherit;
+    color: var(--ink);
+    transition: border-color .3s var(--ease);
+  }
+  form textarea { min-height: 130px; resize: vertical; }
+  form input:focus, form textarea:focus { outline: none; border-bottom-color: var(--gold); }
+  form label {
+    position: absolute; left: 0; top: 18px;
+    font-size: 14px; color: var(--ink-soft);
+    pointer-events: none;
+    transition: all .25s var(--ease);
+  }
+  form input:focus + label,
+  form input:not(:placeholder-shown) + label,
+  form textarea:focus + label,
+  form textarea:not(:placeholder-shown) + label {
+    top: -2px;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    font-weight: 600;
+  }
+  form button[type="submit"] { margin-top: 16px; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 80px 0 30px;
+    position: relative;
+    z-index: 2;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 50px;
+    padding-bottom: 50px;
+    border-bottom: 1px solid rgba(245,236,217,.12);
+  }
+  .footer-brand h3 {
+    font-size: 30px;
+    font-style: italic;
+    font-weight: 300;
+    margin-bottom: 12px;
+    color: var(--cream);
+  }
+  .footer-brand p { color: rgba(245,236,217,.6); font-size: 14px; max-width: 320px; }
+  footer h5 { font-family: var(--sans); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; font-weight: 700; }
+  footer ul { list-style: none; }
+  footer ul li { margin-bottom: 10px; }
+  footer ul a { font-size: 14px; color: rgba(245,236,217,.7); transition: color .25s; }
+  footer ul a:hover { color: var(--gold); }
+  .footer-bot {
+    padding-top: 26px;
+    display: flex; justify-content: space-between;
+    font-size: 12px;
+    color: rgba(245,236,217,.5);
+    flex-wrap: wrap; gap: 16px;
+  }
+
+  /* ---------- Lightbox ---------- */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(10,14,28,.95);
+    backdrop-filter: blur(10px);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 100;
+    padding: 40px;
+    animation: fade .25s var(--ease);
+  }
+  .lightbox.open { display: flex; }
+  .lightbox-content {
+    max-width: 1200px;
+    max-height: 90vh;
+    width: 100%;
+    background: #000;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    animation: zoom .35s var(--ease);
+    display: flex; flex-direction: column;
+  }
+  .lightbox-content img { width: 100%; max-height: 80vh; object-fit: contain; background: #000; }
+  .lightbox-cap {
+    padding: 18px 24px;
+    background: var(--ink);
+    color: var(--cream);
+    border-top: 1px solid rgba(184,146,74,.35);
+  }
+  .lightbox-cap .cat { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); font-weight: 600; }
+  .lightbox-cap h4 { font-family: var(--serif); font-size: 24px; font-weight: 400; margin-top: 4px; }
+  .lightbox-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(245,236,217,.95);
+    color: var(--ink);
+    display: grid; place-items: center;
+    z-index: 5;
+    transition: transform .25s var(--ease);
+  }
+  .lightbox-close:hover { transform: rotate(90deg); }
+
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes zoom { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  /* ---------- Reveal animations ---------- */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 980px) {
+    nav ul, .nav-cta-desktop { display: none; }
+    .menu-toggle {
+      display: grid; place-items: center;
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--line-strong);
+    }
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-visual { max-height: 480px; }
+    .mission-grid { grid-template-columns: 1fr; }
+    .mission-text, .mission-pillars { grid-column: 1; }
+    .events-grid { grid-template-columns: 1fr; }
+    .event-card:nth-child(odd) { border-right: 0; }
+    .gallery-item.size-wide,
+    .gallery-item.size-large { grid-column: span 12; }
+    .gallery-item.size-tall,
+    .gallery-item.size-square { grid-column: span 6; }
+    .contact-grid { grid-template-columns: 1fr; gap: 50px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    section { padding: 90px 0; }
+    .hero { padding: 130px 0 60px; }
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 0 22px; }
+    form .form-row { grid-template-columns: 1fr; }
+    .event-card { grid-template-columns: 70px 1fr; padding: 26px 0; }
+    .event-card .event-arrow { display: none; }
+    .gallery-item.size-tall,
+    .gallery-item.size-square,
+    .gallery-item.size-wide,
+    .gallery-item.size-large { grid-column: span 12; aspect-ratio: 4/3; }
+    .filter-bar { gap: 8px; }
+    .filter-btn { padding: 8px 14px; font-size: 11px; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .marquee-track { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#" class="brand">
+      <span class="brand-mark">D</span>
+      <span>
+        <strong>La Maison de David</strong>
+        <small>Genève · Suisse</small>
+      </span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="#mission">À propos</a></li>
+        <li><a href="#gallery">Galerie</a></li>
+        <li><a href="#events">Événements</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <a href="#donate" class="btn btn-primary nav-cta-desktop">
+      Faire un don
+      <span class="btn-arrow">→</span>
+    </a>
+    <button class="menu-toggle" aria-label="Menu">
+      <svg width="20" height="14" viewBox="0 0 20 14"><path d="M0 1h20M0 7h20M0 13h14" stroke="currentColor" stroke-width="1.5"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ============ HERO (scrollytelling vidéo) ============ -->
+<section class="hero" id="hero">
+  <div class="hero-sticky">
+    <div class="hero-poster"></div>
+
+    <!-- Vidéo 1 : mini-film montagne → oasis (joue 1× au scroll initial) -->
+    <video class="hero-video is-intro"
+           id="heroIntro"
+           src="videos/intro.mp4"
+           muted playsinline preload="auto"
+           aria-hidden="true"></video>
+
+    <!-- Vidéo 2 : pendule du médaillon (boucle infinie après l'intro) -->
+    <video class="hero-video is-loop"
+           id="heroLoop"
+           src="videos/loop.mp4"
+           muted playsinline loop preload="auto"
+           aria-hidden="true"></video>
+
+    <div class="hero-veil"></div>
+
+    <!-- Mot de bienvenue affiché au tout début (avant scroll) -->
+    <div class="hero-welcome">
+      <span class="greet">Bienvenue<em>.</em></span>
+      <span class="sub">La Maison de David</span>
+    </div>
+
+    <div class="hero-content">
+      <h1>Venez vous<br><em>abreuver</em><br>dans cette oasis.</h1>
+      <blockquote class="hero-quote">
+        « Mais celui qui boira de l'eau que je lui donnerai n'aura jamais soif, et l'eau que je lui donnerai deviendra en lui une source d'eau qui jaillira jusque dans la vie éternelle. »
+        <cite>— Jean 4.14</cite>
+      </blockquote>
+      <div class="hero-cta">
+        <a href="#events" class="btn btn-primary">Prochains événements <span class="btn-arrow">→</span></a>
+        <a href="#gallery" class="btn btn-ghost">Voir la galerie</a>
+      </div>
+    </div>
+
+    <div class="scroll-cue">Découvrir</div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>Louange</span><span>Adoration</span><span>Communion</span><span>Espérance</span><span>Évangélisation</span><span>Gospel</span><span>Prière</span><span>Soins d'âme</span>
+    <span>Louange</span><span>Adoration</span><span>Communion</span><span>Espérance</span><span>Évangélisation</span><span>Gospel</span><span>Prière</span><span>Soins d'âme</span>
+  </div>
+</div>
+
+<!-- ============ MISSION ============ -->
+<section class="mission" id="mission">
+  <div class="container">
+    <div class="mission-grid">
+      <div class="mission-text reveal">
+        <span class="eyebrow">Notre mission</span>
+        <h2 style="margin-top: 18px;">Nous nous réunissons avec foi pour <em>louer et prier</em> ensemble.</h2>
+        <p>La Maison de David est une association qui apporte louange et présence de Dieu dans des lieux fragilisés — foyers, quartiers, temples.</p>
+        <p>À travers la musique et l'adoration, elle offre espérance, paix et réconfort, en créant des moments de rencontre, de guérison et de lumière là où c'est le plus nécessaire.</p>
+      </div>
+      <div class="mission-pillars reveal" style="transition-delay: .2s">
+        <div class="pillar">
+          <span class="pillar-num">i.</span>
+          <div>
+            <h4>Vivre d'amour</h4>
+            <p>Accueillir toute personne désirant vivre des moments de louange à travers ses dons artistiques.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <span class="pillar-num">ii.</span>
+          <div>
+            <h4>Soutenir & envoyer</h4>
+            <p>Aider à développer et envoyer ceux qui veulent grandir dans leur don.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <span class="pillar-num">iii.</span>
+          <div>
+            <h4>Témoigner</h4>
+            <p>Une foi vivante au travers de la Parole, du chant en chorale et des concerts.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <span class="pillar-num">iv.</span>
+          <div>
+            <h4>Communion fraternelle</h4>
+            <p>Vivre l'unité, la simplicité, l'humilité, la vérité, l'amour et l'entraide.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EVENTS ============ -->
+<section class="events" id="events">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">À venir</span>
+      <h2>Prochains rendez-vous.</h2>
+      <p>Des soirées, des cultes, des moments d'évangélisation — là où vous êtes, ou là où nous sommes envoyés.</p>
+    </div>
+    <div class="events-grid">
+      <div class="event-card reveal">
+        <div class="event-date"><span class="day">12</span><span class="mon">Juin 2026</span></div>
+        <div class="event-info"><h4>Holy Disco</h4><p>22:00 · Soirée louange & gospel · Genève</p></div>
+        <div class="event-arrow">→</div>
+      </div>
+      <div class="event-card reveal" style="transition-delay: .08s">
+        <div class="event-date"><span class="day">10</span><span class="mon">Avr 2026</span></div>
+        <div class="event-info"><h4>Évangélisation Dakar</h4><p>00:00 · Mission internationale · Sénégal</p></div>
+        <div class="event-arrow">→</div>
+      </div>
+      <div class="event-card reveal" style="transition-delay: .16s">
+        <div class="event-date"><span class="day">01</span><span class="mon">Mar 2026</span></div>
+        <div class="event-info"><h4>Culte Protestant</h4><p>17:00 · Adoration & enseignement</p></div>
+        <div class="event-arrow">→</div>
+      </div>
+      <div class="event-card reveal" style="transition-delay: .24s">
+        <div class="event-date"><span class="day">21</span><span class="mon">Fév 2026</span></div>
+        <div class="event-info"><h4>Gospel Night</h4><p>20:00 · Concert chorale · Genève</p></div>
+        <div class="event-arrow">→</div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:60px;" class="reveal">
+      <a href="#" class="btn btn-ghost">Voir tous les événements <span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALLERY (NEW) ============ -->
+<section class="gallery" id="gallery">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Galerie · Photos & Vidéos</span>
+      <h2>Des moments vécus, des visages éclairés.</h2>
+      <p>Parcourez nos archives par type d'événement. Chaque image, chaque vidéo raconte un instant partagé — une louange, une prière, une rencontre.</p>
+    </div>
+
+    <div class="filter-bar reveal">
+      <span class="filter-label">Filtrer par</span>
+      <button class="filter-btn active" data-filter="all">Tout <span class="count" data-count="all"></span></button>
+      <button class="filter-btn" data-filter="evangelisation">Évangélisation <span class="count" data-count="evangelisation"></span></button>
+      <button class="filter-btn" data-filter="priere">Groupe de prière <span class="count" data-count="priere"></span></button>
+      <button class="filter-btn" data-filter="soins">Soins d'âme <span class="count" data-count="soins"></span></button>
+      <button class="filter-btn" data-filter="culte">Culte protestant <span class="count" data-count="culte"></span></button>
+      <button class="filter-btn" data-filter="gospel-night">Gospel Night <span class="count" data-count="gospel-night"></span></button>
+      <button class="filter-btn" data-filter="atelier">Atelier Gospel <span class="count" data-count="atelier"></span></button>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid">
+      <!-- Items populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============ DONATE ============ -->
+<section class="donate-banner" id="donate">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow" style="color: var(--gold);">Soutenir l'œuvre</span>
+      <h2 style="margin-top: 24px;">Donnez avec <em>cœur.</em></h2>
+      <p>Votre don soutient la louange portée dans les lieux fragilisés, l'envoi des artistes, et l'organisation des cultes et concerts.</p>
+      <a href="#" class="btn btn-primary">Faire un don <span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <span class="eyebrow">Contact</span>
+        <h2 style="margin-top: 18px;"><em>Écrivez-nous.</em></h2>
+        <p>Pour une collaboration, un besoin, ou simplement pour discuter — nous lisons chaque message.</p>
+        <div class="contact-detail">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div><strong>Adresse</strong><span>Genève, Suisse</span></div>
+        </div>
+        <div class="contact-detail">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <div><strong>Email</strong><span>contact@maisondedavid.com</span></div>
+        </div>
+        <div class="contact-detail">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+          <div><strong>Suivez-nous</strong><span>@lamaisondedavid</span></div>
+        </div>
+      </div>
+
+      <form class="reveal" style="transition-delay: .15s" onsubmit="event.preventDefault(); alert('Merci ! Nous reviendrons vers vous très vite.'); this.reset();">
+        <div class="form-row">
+          <div class="form-field">
+            <input type="text" id="prenom" placeholder=" " required />
+            <label for="prenom">Prénom *</label>
+          </div>
+          <div class="form-field">
+            <input type="text" id="nom" placeholder=" " />
+            <label for="nom">Nom</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <input type="email" id="email" placeholder=" " required />
+            <label for="email">E-mail *</label>
+          </div>
+          <div class="form-field">
+            <input type="tel" id="tel" placeholder=" " />
+            <label for="tel">Numéro</label>
+          </div>
+        </div>
+        <div class="form-field">
+          <textarea id="msg" placeholder=" " required></textarea>
+          <label for="msg">Message *</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Envoyer le message <span class="btn-arrow">→</span></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>La Maison de David</h3>
+        <p>Apporter louange et présence de Dieu dans les lieux fragilisés — par la musique, l'adoration et la prière.</p>
+      </div>
+      <div>
+        <h5>Site</h5>
+        <ul>
+          <li><a href="#mission">À propos</a></li>
+          <li><a href="#gallery">Galerie</a></li>
+          <li><a href="#events">Événements</a></li>
+          <li><a href="#donate">Faire un don</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Événements</h5>
+        <ul>
+          <li><a href="#">Évangélisation</a></li>
+          <li><a href="#">Groupe de prière</a></li>
+          <li><a href="#">Culte protestant</a></li>
+          <li><a href="#">Gospel Night</a></li>
+          <li><a href="#">Atelier Gospel</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Légal</h5>
+        <ul>
+          <li><a href="#">Politique de confidentialité</a></li>
+          <li><a href="#">Conditions d'utilisation</a></li>
+          <li><a href="#">Accessibilité</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <span>© 2026 La Maison de David · Genève, Suisse</span>
+      <span>Conçu avec foi.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lbClose" aria-label="Fermer">
+    <svg width="20" height="20" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.5"/></svg>
+  </button>
+  <div class="lightbox-content">
+    <img id="lbImg" src="" alt="" />
+    <div class="lightbox-cap">
+      <div class="cat" id="lbCat"></div>
+      <h4 id="lbTitle"></h4>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ============================
+     GALLERY DATA
+     ============================ */
+  const galleryItems = [
+    // Évangélisation
+    { cat: 'evangelisation', catLabel: 'Évangélisation', title: 'Mission Dakar 2026', size: 'large', type: 'video', img: 'https://images.unsplash.com/photo-1504805572947-34fad45aed93?auto=format&fit=crop&w=1200&q=80' },
+    { cat: 'evangelisation', catLabel: 'Évangélisation', title: 'Sortie de quartier · Pâquis', size: 'tall', type: 'photo', img: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=80' },
+    { cat: 'evangelisation', catLabel: 'Évangélisation', title: 'Rencontres de rue', size: 'square', type: 'photo', img: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=900&q=80' },
+
+    // Groupe de prière
+    { cat: 'priere', catLabel: 'Groupe de prière', title: 'Veillée de jeudi soir', size: 'wide', type: 'photo', img: 'https://images.unsplash.com/photo-1545239351-cefa43af60f3?auto=format&fit=crop&w=1200&q=80' },
+    { cat: 'priere', catLabel: 'Groupe de prière', title: 'Mains jointes', size: 'square', type: 'photo', img: 'https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=900&q=80' },
+    { cat: 'priere', catLabel: 'Groupe de prière', title: 'Prière silencieuse', size: 'tall', type: 'video', img: 'https://images.unsplash.com/photo-1490127252417-7c393f993ee4?auto=format&fit=crop&w=900&q=80' },
+
+    // Soins d'âme
+    { cat: 'soins', catLabel: "Soins d'âme", title: "Écoute pastorale", size: 'tall', type: 'photo', img: 'https://images.unsplash.com/photo-1529390079861-591de354faf5?auto=format&fit=crop&w=900&q=80' },
+    { cat: 'soins', catLabel: "Soins d'âme", title: 'Accompagnement individuel', size: 'wide', type: 'photo', img: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=80' },
+    { cat: 'soins', catLabel: "Soins d'âme", title: 'Témoignages partagés', size: 'square', type: 'video', img: 'https://images.unsplash.com/photo-1573497019418-b400bb3ab074?auto=format&fit=crop&w=900&q=80' },
+
+    // Culte protestant
+    { cat: 'culte', catLabel: 'Culte protestant', title: 'Culte du 1er mars', size: 'large', type: 'photo', img: 'https://images.unsplash.com/photo-1438032005730-c779502df39b?auto=format&fit=crop&w=1200&q=80' },
+    { cat: 'culte', catLabel: 'Culte protestant', title: 'Adoration matinale', size: 'tall', type: 'video', img: 'https://images.unsplash.com/photo-1519834022362-8c4a8c1e8a3e?auto=format&fit=crop&w=900&q=80' },
+    { cat: 'culte', catLabel: 'Culte protestant', title: 'Lecture de la Parole', size: 'square', type: 'photo', img: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=900&q=80' },
+
+    // Gospel Night
+    { cat: 'gospel-night', catLabel: 'Gospel Night', title: 'Gospel Night · Février 2026', size: 'wide', type: 'video', img: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1200&q=80' },
+    { cat: 'gospel-night', catLabel: 'Gospel Night', title: 'Chorale en lumière', size: 'tall', type: 'photo', img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=900&q=80' },
+    { cat: 'gospel-night', catLabel: 'Gospel Night', title: 'Public en louange', size: 'square', type: 'photo', img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=900&q=80' },
+    { cat: 'gospel-night', catLabel: 'Gospel Night', title: 'Solo · gospel', size: 'square', type: 'video', img: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=900&q=80' },
+
+    // Atelier Gospel
+    { cat: 'atelier', catLabel: 'Atelier Gospel', title: 'Répétition de chœur', size: 'large', type: 'photo', img: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=1200&q=80' },
+    { cat: 'atelier', catLabel: 'Atelier Gospel', title: 'Coaching vocal', size: 'tall', type: 'video', img: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&q=80' },
+    { cat: 'atelier', catLabel: 'Atelier Gospel', title: 'Atelier rythmique', size: 'square', type: 'photo', img: 'https://images.unsplash.com/photo-1485579149621-3123dd979885?auto=format&fit=crop&w=900&q=80' }
+  ];
+
+  /* ============================
+     RENDER GALLERY
+     ============================ */
+  const grid = document.getElementById('galleryGrid');
+  const gradients = {
+    evangelisation: 'linear-gradient(135deg, #b8924a, #6b2424)',
+    priere:         'linear-gradient(135deg, #1a2046, #b8924a)',
+    soins:          'linear-gradient(135deg, #2a2f4a, #8a6a2e)',
+    culte:          'linear-gradient(135deg, #11162b, #b8924a)',
+    'gospel-night': 'linear-gradient(135deg, #6b2424, #11162b)',
+    atelier:        'linear-gradient(135deg, #b8924a, #1a2046)'
+  };
+
+  galleryItems.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = `gallery-item size-${item.size} reveal`;
+    el.dataset.cat = item.cat;
+    el.style.transitionDelay = `${(i % 6) * 0.06}s`;
+    el.innerHTML = `
+      <img src="${item.img}" alt="${item.title}"
+           onerror="this.style.display='none'; this.parentElement.style.background='${gradients[item.cat]}';" />
+      ${item.type === 'video' ? `
+        <div class="play-icon">
+          <svg viewBox="0 0 12 14"><path d="M0 0v14l12-7z"/></svg>
+        </div>` : ''}
+      <div class="item-overlay">
+        <span class="item-cat">${item.catLabel}</span>
+        <span class="item-title">${item.title}</span>
+      </div>
+    `;
+    el.addEventListener('click', () => openLightbox(item));
+    grid.appendChild(el);
+  });
+
+  /* ============================
+     COUNTS
+     ============================ */
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const c = el.dataset.count;
+    el.textContent = c === 'all'
+      ? galleryItems.length
+      : galleryItems.filter(x => x.cat === c).length;
+  });
+
+  /* ============================
+     FILTER
+     ============================ */
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      document.querySelectorAll('.gallery-item').forEach(item => {
+        item.classList.toggle('hidden', f !== 'all' && item.dataset.cat !== f);
+      });
+    });
+  });
+
+  /* ============================
+     LIGHTBOX
+     ============================ */
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbCat = document.getElementById('lbCat');
+  const lbTitle = document.getElementById('lbTitle');
+
+  function openLightbox(item) {
+    lbImg.src = item.img;
+    lbImg.alt = item.title;
+    lbCat.textContent = item.catLabel + (item.type === 'video' ? ' · Vidéo' : ' · Photo');
+    lbTitle.textContent = item.title;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
+  lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  /* ============================
+     SCROLL EFFECTS
+     ============================ */
+  const navEl = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    navEl.classList.toggle('scrolled', window.scrollY > 30);
+  });
+
+  // Reveal on scroll
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ============================
+     HERO : scrollytelling vidéo
+     - intro.mp4 : la lecture suit le scroll (scrub fluide grâce aux keyframes denses)
+     - loop.mp4 : prend le relais quand intro termine, boucle ping-pong infinie
+     - textes : apparition séquencée selon le scroll
+     - Fallback : si le scrub échoue (vieux mobile), lecture auto
+     ============================ */
+  (function initHeroScroll() {
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hero  = document.getElementById('hero');
+    const intro = document.getElementById('heroIntro');
+    const loop  = document.getElementById('heroLoop');
+    if (!hero || !intro || !loop) return;
+
+    if (reduced) {
+      hero.classList.add('is-step-3', 'no-video');
+      return;
+    }
+
+    // === État ===
+    let introReady    = false;
+    let loopReady     = false;
+    let scrubMode     = true;     // true = scrub par scroll, false = lecture auto
+    let scrubFailures = 0;        // compteur d'échecs de seek
+    let lastSeekTarget = 0;
+    let lastSeekActual = 0;
+    let ticking        = false;
+    let lastStep       = 0;
+    const INTRO_DURATION = 10.0;
+
+    // Préchargement et état des vidéos
+    const sticky = hero.querySelector('.hero-sticky');
+    intro.addEventListener('loadeddata', () => {
+      introReady = true;
+      intro.classList.add('is-loaded');
+      if (sticky) sticky.classList.add('is-video-loaded');
+      // Pause au début pour que le scroll prenne le contrôle
+      intro.pause();
+      intro.currentTime = 0;
+      // Active l'étape 0 (Bienvenue) maintenant que la vidéo est visible
+      if (lastStep === 0) hero.classList.add('is-step-0');
+    });
+    intro.addEventListener('error', () => {
+      console.warn('Intro video failed to load');
+      hero.classList.add('no-video');
+    });
+    loop.addEventListener('loadeddata', () => {
+      loopReady = true;
+      loop.play().catch(() => {});
+    });
+    loop.addEventListener('error', () => {
+      console.warn('Loop video failed to load');
+    });
+
+    // Détection de scrub cassé : si après plusieurs seeks, currentTime ne bouge pas,
+    // on bascule sur lecture automatique
+    function checkScrubHealth(target) {
+      if (Math.abs(intro.currentTime - lastSeekActual) < 0.02 && Math.abs(target - lastSeekTarget) > 0.5) {
+        scrubFailures++;
+        if (scrubFailures >= 3) {
+          // Le scrub ne marche pas — on passe en lecture auto
+          scrubMode = false;
+          intro.play().catch(() => {});
+          console.info('Scrub mode disabled, falling back to auto-play');
+        }
+      } else {
+        scrubFailures = Math.max(0, scrubFailures - 1);
+      }
+      lastSeekActual = intro.currentTime;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }
+
+    function update() {
+      const rect       = hero.getBoundingClientRect();
+      const heroTop    = window.scrollY + rect.top;
+      const heroHeight = hero.offsetHeight;
+      const vh         = window.innerHeight;
+      const scrollable = heroHeight - vh;
+      const scrolled   = Math.max(0, Math.min(scrollable, window.scrollY - heroTop));
+      const progress   = scrollable > 0 ? scrolled / scrollable : 0;
+
+      // 1. Pilotage de la vidéo intro (scrub)
+      //    De 0% à 60% du scroll → la vidéo intro joue de 0s à 10s
+      if (introReady && scrubMode) {
+        const introPhase = Math.min(1, progress / 0.6);
+        const t = introPhase * INTRO_DURATION;
+        if (Math.abs(intro.currentTime - t) > 0.04) {
+          lastSeekTarget = t;
+          try {
+            intro.currentTime = t;
+            checkScrubHealth(t);
+          } catch (e) {}
+        }
+      }
+
+      // 2. Transition intro → loop
+      const transitionPoint = 0.55; // léger overlap pour fluidité
+      if (progress >= transitionPoint) {
+        if (!loop.classList.contains('is-active')) {
+          loop.classList.add('is-active');
+          intro.classList.add('is-faded');
+          if (loop.paused) loop.play().catch(() => {});
+        }
+      } else {
+        if (loop.classList.contains('is-active')) {
+          loop.classList.remove('is-active');
+          intro.classList.remove('is-faded');
+        }
+      }
+
+      // 3. Apparition séquencée des textes
+      //    0%   - 15%  : step 0 (Bienvenue)
+      //    15%  - 40%  : step 1 (eyebrow + titre)
+      //    40%  - 70%  : step 2 (+ citation)
+      //    70%  - 100% : step 3 (+ boutons)
+      let step = 0;
+      if      (progress >= 0.70) step = 3;
+      else if (progress >= 0.40) step = 2;
+      else if (progress >= 0.15) step = 1;
+
+      if (step !== lastStep) {
+        hero.classList.remove('is-step-0', 'is-step-1', 'is-step-2', 'is-step-3');
+        // step 0 = Bienvenue, ne s'affiche que si la vidéo est prête
+        if (step === 0 && introReady) hero.classList.add('is-step-0');
+        if (step >= 1) hero.classList.add('is-step-' + step);
+        lastStep = step;
+      }
+
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  })();
+</script>
+
+</body>
+</html>
