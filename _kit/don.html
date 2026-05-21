@@ -199,10 +199,14 @@
   .don-section { padding: 40px 0 100px; position: relative; z-index: 2; }
   .don-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
     gap: 24px;
     align-items: stretch;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
   }
+  .don-grid.cols-2 { grid-template-columns: repeat(2, minmax(0, 440px)); }
+  .don-grid.cols-1 { grid-template-columns: minmax(0, 480px); }
+  .don-card[hidden] { display: none !important; }
   .don-card {
     background: var(--parchment);
     border: 1px solid var(--line);
@@ -580,31 +584,31 @@
     <div class="don-grid">
 
       <!-- TWINT -->
-      <div class="don-card reveal">
+      <div class="don-card reveal" id="twintCard">
         <div class="don-card-head">
           <div class="don-card-icon">T</div>
-          <h2>TWINT</h2>
+          <h2 id="twintTitle">TWINT</h2>
         </div>
-        <p class="don-card-sub">Le moyen le plus rapide depuis la Suisse.</p>
+        <p class="don-card-sub" id="twintSub">Le moyen le plus rapide depuis la Suisse.</p>
 
         <div class="twint-qr">
-          <img src="twint-qr.avif" alt="QR code TWINT — La Maison de David" />
+          <img id="twintImg" src="twint-qr.avif" alt="QR code TWINT — La Maison de David" />
         </div>
         <p class="twint-caption">Scanne le QR avec ton app TWINT.</p>
       </div>
 
       <!-- IBAN -->
-      <div class="don-card reveal" style="transition-delay: .12s">
+      <div class="don-card reveal" id="ibanCard" style="transition-delay: .12s">
         <div class="don-card-head">
           <div class="don-card-icon">€</div>
-          <h2>Virement bancaire</h2>
+          <h2 id="ibanTitle">Virement bancaire</h2>
         </div>
-        <p class="don-card-sub">Suisse et international.</p>
+        <p class="don-card-sub" id="ibanSub">Suisse et international.</p>
 
         <div class="iban-rows">
           <div class="iban-row">
             <span class="label">Bénéficiaire</span>
-            <span class="value">La Maison de David</span>
+            <span class="value" id="ibanBeneficiary">La Maison de David</span>
           </div>
           <div class="iban-row">
             <span class="label">IBAN</span>
@@ -612,11 +616,11 @@
           </div>
           <div class="iban-row">
             <span class="label">Banque</span>
-            <span class="value">Banque Cantonale de Genève (BCGE)</span>
+            <span class="value" id="ibanBank">Banque Cantonale de Genève (BCGE)</span>
           </div>
           <div class="iban-row">
             <span class="label">BIC / SWIFT</span>
-            <span class="value mono">BCGECHGGXXX</span>
+            <span class="value mono" id="ibanBic">BCGECHGGXXX</span>
           </div>
         </div>
 
@@ -630,13 +634,13 @@
       </div>
 
       <!-- STRIPE / Carte bancaire -->
-      <div class="don-card is-coming reveal" style="transition-delay: .24s">
-        <span class="don-card-badge">Bientôt</span>
+      <div class="don-card is-coming reveal" id="stripeCard" style="transition-delay: .24s">
+        <span class="don-card-badge" id="stripeBadge">Bientôt</span>
         <div class="don-card-head">
           <div class="don-card-icon">€</div>
-          <h2>Carte bancaire</h2>
+          <h2 id="stripeTitle">Carte bancaire</h2>
         </div>
-        <p class="don-card-sub">Visa, Mastercard, Apple Pay, Google Pay.</p>
+        <p class="don-card-sub" id="stripeSub">Visa, Mastercard, Apple Pay, Google Pay.</p>
 
         <div class="stripe-visual">
           <div class="stripe-icon">
@@ -649,10 +653,10 @@
           <div class="stripe-methods">Paiement sécurisé</div>
         </div>
 
-        <a href="#" class="stripe-cta is-disabled" aria-disabled="true" tabindex="-1">
+        <a href="#" class="stripe-cta is-disabled" id="stripeCta" aria-disabled="true" tabindex="-1">
           Bientôt disponible
         </a>
-        <p class="stripe-note">Le paiement par carte sera activé dès l'ouverture du compte Stripe de l'association.</p>
+        <p class="stripe-note" id="stripeNote">Le paiement par carte sera activé dès l'ouverture du compte Stripe de l'association.</p>
       </div>
 
     </div>
@@ -757,7 +761,6 @@
         copyLabel.textContent = "Copier l'IBAN";
       }, 2600);
     } catch (err) {
-      // Fallback : sélectionne le texte pour copie manuelle
       const range = document.createRange();
       range.selectNodeContents(ibanValue);
       const sel = window.getSelection();
@@ -766,6 +769,91 @@
       showToast('Sélectionné — fais Cmd/Ctrl+C');
     }
   });
+
+  /* ============================
+     SUPABASE : chargement des méthodes de don
+     Les valeurs HTML par défaut sont conservées comme fallback
+     si la requête échoue (offline, table vide, etc.)
+     ============================ */
+  const SUPABASE_URL = 'https://eppxcrlppxcktotqnkjp.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_Ret1opucP7rF1qjO6zICUQ_XXEAvJMO';
+
+  function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el && value != null && value !== '') el.textContent = value;
+  }
+
+  function applyTwint(m) {
+    const card = document.getElementById('twintCard');
+    card.hidden = !m.is_enabled;
+    setText('twintTitle', m.title);
+    setText('twintSub', m.subtitle);
+    if (m.twint_image_url) {
+      document.getElementById('twintImg').src = m.twint_image_url;
+    }
+  }
+
+  function applyIban(m) {
+    const card = document.getElementById('ibanCard');
+    card.hidden = !m.is_enabled;
+    setText('ibanTitle', m.title);
+    setText('ibanSub', m.subtitle);
+    setText('ibanBeneficiary', m.iban_beneficiary);
+    setText('ibanValue', m.iban_value);
+    setText('ibanBank', m.iban_bank);
+    setText('ibanBic', m.iban_bic);
+  }
+
+  function applyStripe(m) {
+    const card = document.getElementById('stripeCard');
+    card.hidden = !m.is_enabled;
+    setText('stripeTitle', m.title);
+    setText('stripeSub', m.subtitle);
+    const cta = document.getElementById('stripeCta');
+    const badge = document.getElementById('stripeBadge');
+    const note = document.getElementById('stripeNote');
+    if (m.stripe_payment_link) {
+      cta.href = m.stripe_payment_link;
+      cta.target = '_blank';
+      cta.rel = 'noopener noreferrer';
+      cta.classList.remove('is-disabled');
+      cta.removeAttribute('aria-disabled');
+      cta.removeAttribute('tabindex');
+      cta.textContent = 'Donner par carte';
+      card.classList.remove('is-coming');
+      if (badge) badge.hidden = true;
+      if (note) note.hidden = true;
+    }
+  }
+
+  function updateGridCols() {
+    const grid = document.querySelector('.don-grid');
+    if (!grid) return;
+    const visible = grid.querySelectorAll('.don-card:not([hidden])').length;
+    grid.classList.remove('cols-1', 'cols-2', 'cols-3');
+    if (visible === 1) grid.classList.add('cols-1');
+    else if (visible === 2) grid.classList.add('cols-2');
+    else grid.classList.add('cols-3');
+  }
+
+  (async function loadDonationMethods() {
+    try {
+      const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2');
+      const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+      const { data, error } = await supabase
+        .from('donation_methods')
+        .select('*')
+        .order('display_order', { ascending: true });
+      if (error) { console.warn('[Supabase] donation_methods:', error.message); return; }
+      const byType = Object.fromEntries((data || []).map(m => [m.type, m]));
+      if (byType.twint)  applyTwint(byType.twint);
+      if (byType.iban)   applyIban(byType.iban);
+      if (byType.stripe) applyStripe(byType.stripe);
+      updateGridCols();
+    } catch (err) {
+      console.error('[Supabase] chargement dons :', err);
+    }
+  })();
 </script>
 
 </body>
