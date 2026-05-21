@@ -199,20 +199,34 @@
   .don-section { padding: 40px 0 100px; position: relative; z-index: 2; }
   .don-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
     align-items: stretch;
   }
   .don-card {
     background: var(--parchment);
     border: 1px solid var(--line);
     border-radius: 12px;
-    padding: 42px 38px;
+    padding: 38px 32px;
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
   }
+  .don-card-badge {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: var(--gold);
+    color: var(--ink);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    z-index: 3;
+  }
+  .don-card.is-coming { opacity: .92; }
   .don-card::before {
     content: "";
     position: absolute;
@@ -331,6 +345,78 @@
     background: var(--gold-deep);
   }
 
+  /* Stripe card */
+  .stripe-visual {
+    background: linear-gradient(135deg, var(--ink) 0%, #1a2046 100%);
+    border-radius: 10px;
+    padding: 30px 24px;
+    margin: 0 auto 22px;
+    width: 100%;
+    color: var(--cream);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .stripe-visual::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(400px 200px at 80% 0%, rgba(184,146,74,.25), transparent 60%);
+    pointer-events: none;
+  }
+  .stripe-visual .stripe-icon {
+    width: 56px; height: 40px;
+    margin: 0 auto 14px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-deep) 100%);
+    display: grid; place-items: center;
+    box-shadow: 0 6px 18px -4px rgba(0,0,0,.4);
+    position: relative;
+  }
+  .stripe-visual .stripe-icon svg { color: var(--ink); }
+  .stripe-visual .stripe-methods {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(245,236,217,.7);
+    font-weight: 600;
+    position: relative;
+  }
+  .stripe-cta {
+    margin-top: auto;
+    padding-top: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 22px;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    transition: background .25s var(--ease), transform .25s var(--ease);
+  }
+  .stripe-cta:hover {
+    background: var(--gold-deep);
+    transform: translateY(-1px);
+  }
+  .stripe-cta.is-disabled {
+    background: var(--line-strong);
+    color: rgba(17,22,43,.55);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .stripe-note {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    text-align: center;
+    font-style: italic;
+  }
+
   /* ---------- Thanks ---------- */
   .thanks {
     background: var(--parchment);
@@ -431,10 +517,13 @@
   .reveal.in { opacity: 1; transform: translateY(0); }
 
   /* ---------- Responsive ---------- */
+  @media (max-width: 1100px) {
+    .don-grid { grid-template-columns: 1fr; gap: 22px; }
+    .don-card { padding: 42px 38px; }
+  }
   @media (max-width: 980px) {
     nav ul, .nav-cta-desktop { display: none; }
     .menu-toggle { display: grid; }
-    .don-grid { grid-template-columns: 1fr; gap: 22px; }
     .don-hero { padding: 140px 0 40px; }
     .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
   }
@@ -538,6 +627,32 @@
           </svg>
           <span class="iban-copy-label">Copier l'IBAN</span>
         </button>
+      </div>
+
+      <!-- STRIPE / Carte bancaire -->
+      <div class="don-card is-coming reveal" style="transition-delay: .24s">
+        <span class="don-card-badge">Bientôt</span>
+        <div class="don-card-head">
+          <div class="don-card-icon">€</div>
+          <h2>Carte bancaire</h2>
+        </div>
+        <p class="don-card-sub">Visa, Mastercard, Apple Pay, Google Pay.</p>
+
+        <div class="stripe-visual">
+          <div class="stripe-icon">
+            <svg width="22" height="16" viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="1" width="22" height="14" rx="2"/>
+              <line x1="1" y1="6" x2="23" y2="6"/>
+              <line x1="5" y1="11" x2="9" y2="11"/>
+            </svg>
+          </div>
+          <div class="stripe-methods">Paiement sécurisé</div>
+        </div>
+
+        <a href="#" class="stripe-cta is-disabled" aria-disabled="true" tabindex="-1">
+          Bientôt disponible
+        </a>
+        <p class="stripe-note">Le paiement par carte sera activé dès l'ouverture du compte Stripe de l'association.</p>
       </div>
 
     </div>
