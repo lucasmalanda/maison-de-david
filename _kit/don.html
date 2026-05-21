@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Faire un don — La Maison de David</title>
+<meta name="description" content="Soutenez La Maison de David par TWINT ou virement bancaire. Votre don porte la louange et la présence de Dieu dans les lieux fragilisés." />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  /* ---------- Tokens ---------- */
+  :root {
+    --cream: #f5ecd9;
+    --cream-deep: #ebe0c5;
+    --parchment: #fdf8ec;
+    --ink: #11162b;
+    --ink-soft: #2a2f4a;
+    --gold: #b8924a;
+    --gold-deep: #8a6a2e;
+    --burgundy: #6b2424;
+    --line: rgba(17, 22, 43, 0.14);
+    --line-strong: rgba(17, 22, 43, 0.28);
+
+    --serif: "Fraunces", "Times New Roman", serif;
+    --sans: "Manrope", -apple-system, system-ui, sans-serif;
+
+    --container: 1240px;
+    --ease: cubic-bezier(.2,.7,.2,1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.55;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Subtle paper grain */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.07  0 0 0 0 0.05  0 0 0 0 0.03  0 0 0 0.18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+
+  .container { max-width: var(--container); margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
+
+  h1, h2, h3, h4 { font-family: var(--serif); font-weight: 400; letter-spacing: -0.02em; line-height: 1.05; }
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--gold-deep);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--gold); }
+
+  /* ---------- Header ---------- */
+  header.nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    color: var(--ink);
+    background: rgba(245, 236, 217, 0.92);
+    backdrop-filter: saturate(140%) blur(14px);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 14px;
+    font-family: var(--serif);
+    font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+  .brand-mark {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--gold) 0%, var(--gold-deep) 65%, var(--ink) 100%);
+    display: grid; place-items: center;
+    color: var(--cream);
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 20px;
+    box-shadow: 0 2px 0 rgba(17,22,43,.2), inset 0 1px 0 rgba(255,255,255,.25);
+  }
+  .brand strong { font-weight: 400; }
+  .brand small {
+    display: block;
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    color: var(--gold-deep);
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+  nav ul {
+    display: flex; gap: 36px; list-style: none;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  nav ul a { position: relative; padding: 4px 0; }
+  nav ul a::after {
+    content: "";
+    position: absolute; left: 0; bottom: -2px;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width .3s var(--ease);
+  }
+  nav ul a:hover::after { width: 100%; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 13px 22px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    transition: transform .25s var(--ease), background .25s var(--ease), color .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .btn-primary:hover {
+    background: var(--gold-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px -10px rgba(17,22,43,.45);
+  }
+  .btn-ghost {
+    border: 1px solid var(--ink);
+    color: var(--ink);
+  }
+  .btn-ghost:hover { background: var(--ink); color: var(--cream); }
+  .btn-arrow { transition: transform .3s var(--ease); }
+  .btn:hover .btn-arrow { transform: translateX(4px); }
+
+  .menu-toggle {
+    display: none;
+    place-items: center;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+  }
+
+  /* ---------- Don hero ---------- */
+  .don-hero {
+    padding: 180px 0 60px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  .don-hero .eyebrow { justify-content: center; }
+  .don-hero h1 {
+    font-size: clamp(40px, 6vw, 76px);
+    margin: 22px 0 22px;
+    font-style: italic;
+    font-weight: 300;
+  }
+  .don-hero h1 em { font-style: normal; color: var(--gold-deep); }
+  .don-hero p {
+    max-width: 580px;
+    margin: 0 auto;
+    color: var(--ink-soft);
+    font-size: 17px;
+  }
+
+  /* ---------- Don grid ---------- */
+  .don-section { padding: 40px 0 100px; position: relative; z-index: 2; }
+  .don-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: stretch;
+  }
+  .don-card {
+    background: var(--parchment);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 42px 38px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+  .don-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .don-card-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  .don-card-icon {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--gold);
+    display: grid; place-items: center;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .don-card h2 {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .don-card-sub {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 28px;
+  }
+
+  /* TWINT card */
+  .twint-qr {
+    background: #fff;
+    padding: 22px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    margin: 0 auto;
+    max-width: 320px;
+    width: 100%;
+    box-shadow: 0 4px 16px rgba(17,22,43,.06);
+  }
+  .twint-qr img {
+    width: 100%; height: auto;
+    display: block;
+  }
+  .twint-caption {
+    text-align: center;
+    margin-top: 22px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-soft);
+  }
+
+  /* IBAN card */
+  .iban-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    flex: 1;
+  }
+  .iban-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .iban-row:last-of-type { border-bottom: 0; }
+  .iban-row .label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    font-weight: 700;
+  }
+  .iban-row .value {
+    font-size: 17px;
+    color: var(--ink);
+    font-weight: 500;
+    word-break: break-word;
+  }
+  .iban-row .value.mono {
+    font-family: "SF Mono", "Menlo", "Monaco", "Consolas", monospace;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .iban-copy {
+    margin-top: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 22px;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    transition: background .25s var(--ease), transform .25s var(--ease);
+    align-self: flex-start;
+  }
+  .iban-copy:hover {
+    background: var(--gold-deep);
+    transform: translateY(-1px);
+  }
+  .iban-copy.copied {
+    background: var(--gold-deep);
+  }
+
+  /* ---------- Thanks ---------- */
+  .thanks {
+    background: var(--parchment);
+    text-align: center;
+    padding: 80px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    z-index: 2;
+  }
+  .thanks p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(24px, 3vw, 36px);
+    color: var(--ink);
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.3;
+  }
+  .thanks .verse {
+    display: block;
+    margin-top: 18px;
+    font-family: var(--sans);
+    font-style: normal;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    font-weight: 700;
+  }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 40px;
+    transform: translate(-50%, 60px);
+    background: var(--ink);
+    color: var(--cream);
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    box-shadow: 0 12px 32px -8px rgba(0,0,0,.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s var(--ease), transform .3s var(--ease);
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  .toast svg { color: var(--gold); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 80px 0 30px;
+    position: relative;
+    z-index: 2;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 50px;
+    padding-bottom: 50px;
+    border-bottom: 1px solid rgba(245,236,217,.12);
+  }
+  .footer-brand h3 {
+    font-size: 30px;
+    font-style: italic;
+    font-weight: 300;
+    margin-bottom: 12px;
+    color: var(--cream);
+  }
+  .footer-brand p { color: rgba(245,236,217,.6); font-size: 14px; max-width: 320px; }
+  footer h5 { font-family: var(--sans); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; font-weight: 700; }
+  footer ul { list-style: none; }
+  footer ul li { margin-bottom: 10px; }
+  footer ul a { font-size: 14px; color: rgba(245,236,217,.7); transition: color .25s; }
+  footer ul a:hover { color: var(--gold); }
+  .footer-bot {
+    padding-top: 26px;
+    display: flex; justify-content: space-between;
+    font-size: 12px;
+    color: rgba(245,236,217,.5);
+    flex-wrap: wrap; gap: 16px;
+  }
+
+  /* ---------- Reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 980px) {
+    nav ul, .nav-cta-desktop { display: none; }
+    .menu-toggle { display: grid; }
+    .don-grid { grid-template-columns: 1fr; gap: 22px; }
+    .don-hero { padding: 140px 0 40px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+  }
+  @media (max-width: 600px) {
+    .container { padding: 0 22px; }
+    .don-card { padding: 32px 24px; }
+    .iban-copy { width: 100%; align-self: stretch; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">D</span>
+      <span>
+        <strong>La Maison de David</strong>
+        <small>Genève · Suisse</small>
+      </span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="index.html#mission">À propos</a></li>
+        <li><a href="index.html#gallery">Galerie</a></li>
+        <li><a href="index.html#events">Événements</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <a href="index.html" class="btn btn-ghost nav-cta-desktop">
+      <span class="btn-arrow" style="display:inline-block; transform: rotate(180deg);">→</span>
+      Accueil
+    </a>
+    <button class="menu-toggle" aria-label="Menu">
+      <svg width="20" height="14" viewBox="0 0 20 14"><path d="M0 1h20M0 7h20M0 13h14" stroke="currentColor" stroke-width="1.5"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ============ DON HERO ============ -->
+<section class="don-hero">
+  <div class="container reveal in">
+    <span class="eyebrow">Soutenir l'œuvre</span>
+    <h1>Donnez avec <em>cœur.</em></h1>
+    <p>Votre don soutient la louange portée dans les lieux fragilisés, l'envoi des artistes, et l'organisation des cultes et concerts.</p>
+  </div>
+</section>
+
+<!-- ============ DON METHODS ============ -->
+<section class="don-section">
+  <div class="container">
+    <div class="don-grid">
+
+      <!-- TWINT -->
+      <div class="don-card reveal">
+        <div class="don-card-head">
+          <div class="don-card-icon">T</div>
+          <h2>TWINT</h2>
+        </div>
+        <p class="don-card-sub">Le moyen le plus rapide depuis la Suisse.</p>
+
+        <div class="twint-qr">
+          <img src="twint-qr.avif" alt="QR code TWINT — La Maison de David" />
+        </div>
+        <p class="twint-caption">Scanne le QR avec ton app TWINT.</p>
+      </div>
+
+      <!-- IBAN -->
+      <div class="don-card reveal" style="transition-delay: .12s">
+        <div class="don-card-head">
+          <div class="don-card-icon">€</div>
+          <h2>Virement bancaire</h2>
+        </div>
+        <p class="don-card-sub">Suisse et international.</p>
+
+        <div class="iban-rows">
+          <div class="iban-row">
+            <span class="label">Bénéficiaire</span>
+            <span class="value">La Maison de David</span>
+          </div>
+          <div class="iban-row">
+            <span class="label">IBAN</span>
+            <span class="value mono" id="ibanValue">CH37 0078 8000 0510 8559 6</span>
+          </div>
+          <div class="iban-row">
+            <span class="label">Banque</span>
+            <span class="value">Banque Cantonale de Genève (BCGE)</span>
+          </div>
+          <div class="iban-row">
+            <span class="label">BIC / SWIFT</span>
+            <span class="value mono">BCGECHGGXXX</span>
+          </div>
+        </div>
+
+        <button class="iban-copy" id="copyIbanBtn" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span class="iban-copy-label">Copier l'IBAN</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ THANKS ============ -->
+<section class="thanks">
+  <div class="container reveal">
+    <p>Merci pour votre générosité 🙏</p>
+    <span class="verse">« Que chacun donne comme il l'a résolu en son cœur » — 2 Corinthiens 9.7</span>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>La Maison de David</h3>
+        <p>Apporter louange et présence de Dieu dans les lieux fragilisés — par la musique, l'adoration et la prière.</p>
+      </div>
+      <div>
+        <h5>Site</h5>
+        <ul>
+          <li><a href="index.html#mission">À propos</a></li>
+          <li><a href="index.html#gallery">Galerie</a></li>
+          <li><a href="index.html#events">Événements</a></li>
+          <li><a href="don.html">Faire un don</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Événements</h5>
+        <ul>
+          <li><a href="index.html#events">Évangélisation</a></li>
+          <li><a href="index.html#events">Groupe de prière</a></li>
+          <li><a href="index.html#events">Culte protestant</a></li>
+          <li><a href="index.html#events">Gospel Night</a></li>
+          <li><a href="index.html#events">Atelier Gospel</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Légal</h5>
+        <ul>
+          <li><a href="#">Politique de confidentialité</a></li>
+          <li><a href="#">Conditions d'utilisation</a></li>
+          <li><a href="#">Accessibilité</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <span>© 2026 La Maison de David · Genève, Suisse</span>
+      <span>Conçu avec foi.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ TOAST ============ -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+  <span id="toastMsg">IBAN copié</span>
+</div>
+
+<script>
+  /* Reveal on scroll */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* Toast */
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  let toastTimer;
+  function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+  }
+
+  /* Copy IBAN */
+  const copyBtn = document.getElementById('copyIbanBtn');
+  const ibanValue = document.getElementById('ibanValue');
+  const copyLabel = copyBtn.querySelector('.iban-copy-label');
+  copyBtn.addEventListener('click', async () => {
+    const iban = ibanValue.textContent.trim();
+    try {
+      await navigator.clipboard.writeText(iban);
+      showToast('IBAN copié ✓');
+      copyBtn.classList.add('copied');
+      copyLabel.textContent = 'IBAN copié';
+      setTimeout(() => {
+        copyBtn.classList.remove('copied');
+        copyLabel.textContent = "Copier l'IBAN";
+      }, 2600);
+    } catch (err) {
+      // Fallback : sélectionne le texte pour copie manuelle
+      const range = document.createRange();
+      range.selectNodeContents(ibanValue);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      showToast('Sélectionné — fais Cmd/Ctrl+C');
+    }
+  });
+</script>
+
+</body>
+</html>
