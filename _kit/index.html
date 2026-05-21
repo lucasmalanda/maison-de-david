@@ -920,6 +920,128 @@
   @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
   @keyframes zoom { from { transform: scale(.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
+  /* ---------- Event Modal ---------- */
+  .event-modal {
+    position: fixed; inset: 0;
+    background: rgba(10,14,28,.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 100;
+    padding: 28px;
+    animation: fade .25s var(--ease);
+  }
+  .event-modal.open { display: flex; }
+  .event-modal-content {
+    width: 100%;
+    max-width: 1080px;
+    max-height: 90vh;
+    background: var(--cream);
+    color: var(--ink);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    animation: zoom .35s var(--ease);
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,.5);
+  }
+  .event-modal.no-flyer .event-modal-content {
+    grid-template-columns: 1fr;
+    max-width: 720px;
+  }
+  .event-modal-flyer {
+    background: var(--ink);
+    display: flex;
+    align-items: center; justify-content: center;
+    overflow: hidden;
+    max-height: 90vh;
+  }
+  .event-modal-flyer img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .event-modal.no-flyer .event-modal-flyer { display: none; }
+  .event-modal-body {
+    padding: 48px 44px;
+    overflow-y: auto;
+    max-height: 90vh;
+  }
+  .event-modal-cat {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 18px;
+  }
+  .event-modal-body h3 {
+    font-family: var(--serif);
+    font-size: clamp(28px, 3.4vw, 40px);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 26px;
+    color: var(--ink);
+  }
+  .event-modal-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 24px;
+  }
+  .event-modal-meta > div {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+  .event-modal-meta svg {
+    flex-shrink: 0;
+    color: var(--gold-deep);
+    margin-top: 2px;
+  }
+  .event-modal-desc {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    white-space: pre-line;
+  }
+  .event-modal-desc:empty { display: none; }
+  .event-modal-close {
+    position: absolute;
+    top: 18px; right: 18px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(245,236,217,.95);
+    color: var(--ink);
+    display: grid; place-items: center;
+    z-index: 5;
+    transition: transform .25s var(--ease);
+    box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  }
+  .event-modal-close:hover { transform: rotate(90deg); }
+
+  @media (max-width: 768px) {
+    .event-modal { padding: 0; }
+    .event-modal-content {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+      max-height: 100vh;
+      height: 100vh;
+      border-radius: 0;
+    }
+    .event-modal-flyer { max-height: 40vh; }
+    .event-modal-flyer img { object-fit: contain; }
+    .event-modal-body { padding: 30px 22px 40px; }
+    .event-modal-close { top: 12px; right: 12px; }
+  }
+
   /* ---------- Reveal animations ---------- */
   .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
   .reveal.in { opacity: 1; transform: translateY(0); }
@@ -1260,6 +1382,41 @@
   </div>
 </div>
 
+<!-- ============ EVENT MODAL ============ -->
+<div class="event-modal" id="eventModal" aria-hidden="true" role="dialog" aria-labelledby="emTitle">
+  <button class="event-modal-close" id="emClose" aria-label="Fermer">
+    <svg width="20" height="20" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.5"/></svg>
+  </button>
+  <div class="event-modal-content">
+    <div class="event-modal-flyer" id="emFlyerWrap">
+      <img id="emFlyer" src="" alt="" />
+    </div>
+    <div class="event-modal-body">
+      <span class="event-modal-cat" id="emCat"></span>
+      <h3 id="emTitle"></h3>
+      <div class="event-modal-meta">
+        <div id="emDateWrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <div id="emDate"></div>
+        </div>
+        <div id="emLocationWrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <div id="emLocation"></div>
+        </div>
+      </div>
+      <div class="event-modal-desc" id="emDesc"></div>
+    </div>
+  </div>
+</div>
+
 <script>
   /* ============================
      GALLERY + EVENTS DATA — chargées depuis Supabase au runtime
@@ -1354,6 +1511,7 @@
         <div class="event-info"><h4>${event.title}</h4><p>${parts.join(' · ')}</p></div>
         <div class="event-arrow">→</div>
       `;
+      card.addEventListener('click', () => openEventModal(event));
       eventsGrid.appendChild(card);
     });
   }
@@ -1407,7 +1565,70 @@
   }
   document.getElementById('lbClose').addEventListener('click', closeLightbox);
   lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeLightbox(); closeEventModal(); }
+  });
+
+  /* ============================
+     EVENT MODAL
+     ============================ */
+  const DAY_FR = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const MONTH_FR = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+
+  const eventModal = document.getElementById('eventModal');
+  const emFlyer = document.getElementById('emFlyer');
+  const emCat = document.getElementById('emCat');
+  const emTitle = document.getElementById('emTitle');
+  const emDate = document.getElementById('emDate');
+  const emLocation = document.getElementById('emLocation');
+  const emLocationWrap = document.getElementById('emLocationWrap');
+  const emDesc = document.getElementById('emDesc');
+
+  function formatEventDateLong(d) {
+    const day = DAY_FR[d.getDay()];
+    const num = d.getDate();
+    const month = MONTH_FR[d.getMonth()];
+    const year = d.getFullYear();
+    const h = String(d.getHours()).padStart(2, '0');
+    const m = String(d.getMinutes()).padStart(2, '0');
+    return `${day} ${num} ${month} ${year} à ${h}h${m}`;
+  }
+
+  function openEventModal(event) {
+    if (event.flyer_url) {
+      emFlyer.src = event.flyer_url;
+      emFlyer.alt = event.title || 'Flyer';
+      eventModal.classList.remove('no-flyer');
+    } else {
+      emFlyer.removeAttribute('src');
+      eventModal.classList.add('no-flyer');
+    }
+    const catLabel = CATEGORY_LABELS[event.category] || event.category || '';
+    emCat.textContent = catLabel;
+    emCat.style.display = catLabel ? 'inline-block' : 'none';
+    emTitle.textContent = event.title || '';
+    emDate.textContent = formatEventDateLong(new Date(event.date));
+    if (event.location) {
+      emLocation.textContent = event.location;
+      emLocationWrap.style.display = 'flex';
+    } else {
+      emLocationWrap.style.display = 'none';
+    }
+    emDesc.textContent = event.description || '';
+    eventModal.classList.add('open');
+    eventModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeEventModal() {
+    if (!eventModal.classList.contains('open')) return;
+    eventModal.classList.remove('open');
+    eventModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('emClose').addEventListener('click', closeEventModal);
+  eventModal.addEventListener('click', e => { if (e.target === eventModal) closeEventModal(); });
 
   /* ============================
      SCROLL EFFECTS
