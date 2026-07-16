@@ -9,6 +9,8 @@ type NavItem = {
   href: string;
   label: string;
   icon: React.ReactNode;
+  /** Si true, l'entrée n'est visible que pour les admins. */
+  adminOnly?: boolean;
 };
 
 const NAV: NavItem[] = [
@@ -56,7 +58,8 @@ const NAV: NavItem[] = [
   },
   {
     href: "/dashboard/utilisateurs",
-    label: "Bénévoles",
+    label: "Utilisateurs",
+    adminOnly: true,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
         <circle cx="9" cy="8" r="3.5" />
@@ -68,9 +71,16 @@ const NAV: NavItem[] = [
   },
 ];
 
-export function Sidebar({ user }: { user: { email?: string } }) {
+export function Sidebar({
+  user,
+  isAdmin = false,
+}: {
+  user: { email?: string };
+  isAdmin?: boolean;
+}) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const nav = NAV.filter((item) => !item.adminOnly || isAdmin);
 
   function isActive(href: string) {
     if (href === "/dashboard") return pathname === "/dashboard";
@@ -139,7 +149,7 @@ export function Sidebar({ user }: { user: { email?: string } }) {
             Pilotage
           </p>
           <ul className="space-y-1">
-            {NAV.map((item) => {
+            {nav.map((item) => {
               const active = isActive(item.href);
               return (
                 <li key={item.href}>

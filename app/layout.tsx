@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Manrope } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -33,6 +34,16 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans bg-cream text-ink">
         {children}
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: {
+              background: "#fdf8ec",
+              border: "1px solid rgba(17, 22, 43, 0.14)",
+              color: "#11162b",
+            },
+          }}
+        />
       </body>
     </html>
   );
