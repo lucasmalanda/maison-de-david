@@ -4,13 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { signOut } from "@/lib/auth/actions";
+import type { UserRole } from "@/lib/users/queries";
 
 type NavItem = {
   href: string;
   label: string;
   icon: React.ReactNode;
-  /** Si true, l'entrée n'est visible que pour les admins. */
-  adminOnly?: boolean;
+  /** Rôles qui voient l'entrée. Absent = tout le monde. */
+  roles?: UserRole[];
 };
 
 const NAV: NavItem[] = [
@@ -29,6 +30,7 @@ const NAV: NavItem[] = [
   {
     href: "/dashboard/evenements",
     label: "Événements",
+    roles: ["admin", "editor"],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
         <rect x="3" y="5" width="18" height="16" rx="2" />
@@ -39,6 +41,7 @@ const NAV: NavItem[] = [
   {
     href: "/dashboard/galerie",
     label: "Galerie",
+    roles: ["admin", "editor"],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
         <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -50,6 +53,7 @@ const NAV: NavItem[] = [
   {
     href: "/dashboard/dons",
     label: "Dons",
+    roles: ["admin"],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -59,7 +63,7 @@ const NAV: NavItem[] = [
   {
     href: "/dashboard/utilisateurs",
     label: "Utilisateurs",
-    adminOnly: true,
+    roles: ["admin"],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
         <circle cx="9" cy="8" r="3.5" />
@@ -69,18 +73,28 @@ const NAV: NavItem[] = [
       </svg>
     ),
   },
+  {
+    href: "/dashboard/profil",
+    label: "Mon profil",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7" />
+      </svg>
+    ),
+  },
 ];
 
 export function Sidebar({
   user,
-  isAdmin = false,
+  role = null,
 }: {
   user: { email?: string };
-  isAdmin?: boolean;
+  role?: UserRole | null;
 }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const nav = NAV.filter((item) => !item.adminOnly || isAdmin);
+  const nav = NAV.filter((item) => !item.roles || (role !== null && item.roles.includes(role)));
 
   function isActive(href: string) {
     if (href === "/dashboard") return pathname === "/dashboard";

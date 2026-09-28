@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { canEditContent, getCurrentUser } from "@/lib/users/queries";
 
 type KPI = {
   label: string;
@@ -12,6 +14,9 @@ export default async function DashboardHome() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const me = await getCurrentUser();
+  const isEditor = canEditContent(me?.role);
 
   const nowIso = new Date().toISOString();
 
@@ -64,8 +69,20 @@ export default async function DashboardHome() {
           Bonjour <em className="text-gold">{firstName}</em>,
         </h1>
         <p className="mt-3 max-w-xl text-base text-ink-soft">
-          Voici un aperçu de l&apos;activité. Tu peux gérer les événements et
-          la galerie depuis la barre latérale.
+          {isEditor ? (
+            <>
+              Voici un aperçu de l&apos;activité. Tu peux gérer les événements et
+              la galerie depuis la barre latérale.
+            </>
+          ) : (
+            <>
+              Bienvenue dans l&apos;espace de l&apos;équipe. Commence par remplir{" "}
+              <Link href="/dashboard/profil" className="font-semibold text-gold-deep underline-offset-4 hover:underline">
+                ton profil
+              </Link>{" "}
+              pour indiquer comment tu sers.
+            </>
+          )}
         </p>
       </header>
 

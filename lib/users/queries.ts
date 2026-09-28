@@ -1,7 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-export type UserRole = "admin" | "editor";
+export type UserRole = "admin" | "editor" | "member";
+
+/** Admin et éditeur peuvent modifier le contenu du site ; le membre ne fait que servir. */
+export function canEditContent(role: UserRole | null | undefined): boolean {
+  return role === "admin" || role === "editor";
+}
 
 export type AllowedUser = {
   email: string;

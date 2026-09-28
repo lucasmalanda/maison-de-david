@@ -24,7 +24,7 @@ const passwordSchema = z
   .min(8, "Le mot de passe doit faire au moins 8 caractères")
   .max(72, "Le mot de passe est trop long (max 72 caractères)");
 
-const roleSchema = z.enum(["admin", "editor"]);
+const roleSchema = z.enum(["admin", "editor", "member"]);
 
 const createSchema = z.object({
   email: emailSchema,

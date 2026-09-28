@@ -13,6 +13,13 @@ type Props = {
 const ROLE_LABEL: Record<AllowedUser["role"], string> = {
   admin: "Admin",
   editor: "Éditeur",
+  member: "Membre",
+};
+
+const ROLE_HINT: Record<AllowedUser["role"], string> = {
+  member: "Peut remplir son profil et dire s'il sert, sans modifier le site.",
+  editor: "Peut gérer les événements et la galerie, mais pas les utilisateurs.",
+  admin: "Accès complet, y compris les dons et la gestion des utilisateurs.",
 };
 
 export function UsersManager({ users, currentUserEmail }: Props) {
@@ -194,7 +201,7 @@ const inputClass =
 function AddUserModal({ onClose }: { onClose: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"admin" | "editor">("editor");
+  const [role, setRole] = useState<AllowedUser["role"]>("member");
   const [pending, startTransition] = useTransition();
   // Écran de confirmation qui affiche le mdp une dernière fois.
   const [created, setCreated] = useState<{ email: string; password: string } | null>(null);
@@ -287,27 +294,23 @@ function AddUserModal({ onClose }: { onClose: () => void }) {
         </div>
         <div>
           <Label>Rôle</Label>
-          <div className="mt-1 grid grid-cols-2 gap-2">
-            {(["editor", "admin"] as const).map((r) => (
+          <div className="mt-1 grid grid-cols-3 gap-2">
+            {(["member", "editor", "admin"] as const).map((r) => (
               <button
                 key={r}
                 type="button"
                 onClick={() => setRole(r)}
-                className={`rounded-md border px-4 py-2.5 text-xs font-semibold uppercase tracking-widest transition ${
+                className={`rounded-md border px-2 py-2.5 text-xs font-semibold uppercase tracking-widest transition ${
                   role === r
                     ? "border-gold bg-gold/10 text-gold-deep"
                     : "border-line bg-cream text-ink-soft hover:border-gold/50"
                 }`}
               >
-                {r === "admin" ? "Admin" : "Éditeur"}
+                {ROLE_LABEL[r]}
               </button>
             ))}
           </div>
-          <p className="mt-2 text-xs text-ink-soft">
-            {role === "admin"
-              ? "Accès complet, y compris la gestion des utilisateurs."
-              : "Peut gérer le contenu, mais pas les utilisateurs."}
-          </p>
+          <p className="mt-2 text-xs text-ink-soft">{ROLE_HINT[role]}</p>
         </div>
 
         <div className="flex gap-3 pt-2">

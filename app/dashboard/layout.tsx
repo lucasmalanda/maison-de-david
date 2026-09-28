@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import type { UserRole } from "@/lib/users/queries";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 
 export default async function DashboardLayout({
@@ -18,8 +19,8 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  // Rôle de l'utilisateur (pour n'afficher « Utilisateurs » qu'aux admins).
-  let isAdmin = false;
+  // Rôle de l'utilisateur (pour n'afficher que les entrées auxquelles il a droit).
+  let role: UserRole | null = null;
   if (user.email) {
     const admin = createAdminClient();
     const { data } = await admin
@@ -27,12 +28,12 @@ export default async function DashboardLayout({
       .select("role")
       .eq("email", user.email)
       .maybeSingle();
-    isAdmin = data?.role === "admin";
+    role = (data?.role as UserRole | undefined) ?? null;
   }
 
   return (
     <div className="flex min-h-screen flex-1">
-      <Sidebar user={{ email: user.email }} isAdmin={isAdmin} />
+      <Sidebar user={{ email: user.email }} role={role} />
       <div className="flex flex-1 flex-col lg:pl-72">
         <main className="flex flex-1 flex-col">{children}</main>
       </div>
