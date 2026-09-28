@@ -652,13 +652,15 @@
   }
   .filter-btn.active .count { background: rgba(17,22,43,.18); color: var(--ink); }
 
+  /* Mosaïque en colonnes : chaque photo garde ses proportions (non recadrée). */
   .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 16px;
-    grid-auto-flow: dense;
+    columns: 3;
+    column-gap: 16px;
   }
   .gallery-item {
+    display: block;
+    break-inside: avoid;
+    margin-bottom: 16px;
     position: relative;
     overflow: hidden;
     border-radius: 4px;
@@ -667,8 +669,8 @@
     background: #0a0e1c;
   }
   .gallery-item img {
-    width: 100%; height: 100%;
-    object-fit: cover;
+    display: block;
+    width: 100%; height: auto;
     transition: transform .8s var(--ease), filter .5s var(--ease);
     filter: brightness(0.9) contrast(1.05);
   }
@@ -708,11 +710,8 @@
   .gallery-item:hover .play-icon { transform: scale(1.08); }
   .play-icon svg { width: 16px; height: 16px; margin-left: 2px; fill: var(--ink); }
 
-  /* Sizing presets — masonry-like via grid spans */
-  .gallery-item.size-tall   { grid-column: span 4; aspect-ratio: 3/4; }
-  .gallery-item.size-wide   { grid-column: span 6; aspect-ratio: 16/10; }
-  .gallery-item.size-square { grid-column: span 4; aspect-ratio: 1/1; }
-  .gallery-item.size-large  { grid-column: span 8; aspect-ratio: 4/3; }
+  /* Image absente (ex. vidéo sans aperçu) : on garde une vignette 4/3. */
+  .gallery-item.no-img { aspect-ratio: 4/3; }
   .gallery-item.hidden { display: none; }
 
   /* ---------- Events ---------- */
@@ -1006,6 +1005,20 @@
     color: var(--gold-deep);
     margin-top: 2px;
   }
+  .event-modal-map {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--gold);
+    text-underline-offset: 4px;
+  }
+  .event-modal-map::after { content: " ↗"; color: var(--gold-deep); }
+  .event-modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .event-modal-actions .btn { flex: 1 1 180px; justify-content: center; }
   .event-modal-desc {
     font-size: 15px;
     line-height: 1.75;
@@ -1061,10 +1074,7 @@
     .mission-text, .mission-pillars { grid-column: 1; }
     .events-grid { grid-template-columns: 1fr; }
     .event-card:nth-child(odd) { border-right: 0; }
-    .gallery-item.size-wide,
-    .gallery-item.size-large { grid-column: span 12; }
-    .gallery-item.size-tall,
-    .gallery-item.size-square { grid-column: span 6; }
+    .gallery-grid { columns: 2; }
     .contact-grid { grid-template-columns: 1fr; gap: 50px; }
     .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
     section { padding: 90px 0; }
@@ -1076,10 +1086,8 @@
     form .form-row { grid-template-columns: 1fr; }
     .event-card { grid-template-columns: 70px 1fr; padding: 26px 0; }
     .event-card .event-arrow { display: none; }
-    .gallery-item.size-tall,
-    .gallery-item.size-square,
-    .gallery-item.size-wide,
-    .gallery-item.size-large { grid-column: span 12; aspect-ratio: 4/3; }
+    .gallery-grid { column-gap: 10px; }
+    .gallery-item { margin-bottom: 10px; }
     .filter-bar { gap: 8px; }
     .filter-btn { padding: 8px 14px; font-size: 11px; }
     .footer-grid { grid-template-columns: 1fr; }
@@ -1095,20 +1103,20 @@
     <a href="#" class="brand">
       <span class="brand-mark">D</span>
       <span>
-        <strong>La Maison de David</strong>
-        <small>Genève · Suisse</small>
+        <strong data-text="common.brand">La Maison de David</strong>
+        <small data-text="common.brand.tagline">Genève · Suisse</small>
       </span>
     </a>
     <nav>
       <ul>
-        <li><a href="#mission">À propos</a></li>
-        <li><a href="#gallery">Galerie</a></li>
-        <li><a href="#events">Événements</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#mission" data-text="common.nav.about">À propos</a></li>
+        <li><a href="#gallery" data-text="common.nav.gallery">Galerie</a></li>
+        <li><a href="#events" data-text="common.nav.events">Événements</a></li>
+        <li><a href="#contact" data-text="common.nav.contact">Contact</a></li>
       </ul>
     </nav>
     <a href="don.html" class="btn btn-primary nav-cta-desktop">
-      Faire un don
+      <span data-text="common.nav.donate">Faire un don</span>
       <span class="btn-arrow">→</span>
     </a>
     <button class="menu-toggle" aria-label="Menu">
@@ -1140,29 +1148,29 @@
 
     <!-- Mot de bienvenue affiché au tout début (avant scroll) -->
     <div class="hero-welcome">
-      <span class="greet">Bienvenue<em>.</em></span>
-      <span class="sub">La Maison de David</span>
+      <span class="greet" data-text="home.welcome.greet" data-rich>Bienvenue<em>.</em></span>
+      <span class="sub" data-text="home.welcome.sub">La Maison de David</span>
     </div>
 
     <div class="hero-content">
-      <h1>Venez vous<br><em>abreuver</em><br>dans cette oasis.</h1>
+      <h1 data-text="home.hero.title" data-rich>Venez vous<br><em>abreuver</em><br>dans cette oasis.</h1>
       <blockquote class="hero-quote">
-        « Mais celui qui boira de l'eau que je lui donnerai n'aura jamais soif, et l'eau que je lui donnerai deviendra en lui une source d'eau qui jaillira jusque dans la vie éternelle. »
-        <cite>— Jean 4.14</cite>
+        <span data-text="home.hero.quote">« Mais celui qui boira de l'eau que je lui donnerai n'aura jamais soif, et l'eau que je lui donnerai deviendra en lui une source d'eau qui jaillira jusque dans la vie éternelle. »</span>
+        <cite data-text="home.hero.quote_ref">— Jean 4.14</cite>
       </blockquote>
       <div class="hero-cta">
-        <a href="#events" class="btn btn-primary">Prochains événements <span class="btn-arrow">→</span></a>
-        <a href="#gallery" class="btn btn-ghost">Voir la galerie</a>
+        <a href="#events" class="btn btn-primary"><span data-text="home.hero.cta_events">Prochains événements</span> <span class="btn-arrow">→</span></a>
+        <a href="#gallery" class="btn btn-ghost" data-text="home.hero.cta_gallery">Voir la galerie</a>
       </div>
     </div>
 
-    <div class="scroll-cue">Découvrir</div>
+    <div class="scroll-cue" data-text="home.hero.scroll">Découvrir</div>
   </div>
 </section>
 
 <!-- ============ MARQUEE ============ -->
 <div class="marquee">
-  <div class="marquee-track">
+  <div class="marquee-track" data-text-list="home.marquee">
     <span>Louange</span><span>Adoration</span><span>Communion</span><span>Espérance</span><span>Évangélisation</span><span>Gospel</span><span>Prière</span><span>Soins d'âme</span>
     <span>Louange</span><span>Adoration</span><span>Communion</span><span>Espérance</span><span>Évangélisation</span><span>Gospel</span><span>Prière</span><span>Soins d'âme</span>
   </div>
@@ -1173,38 +1181,38 @@
   <div class="container">
     <div class="mission-grid">
       <div class="mission-text reveal">
-        <span class="eyebrow">Notre mission</span>
-        <h2 style="margin-top: 18px;">Nous nous réunissons avec foi pour <em>louer et prier</em> ensemble.</h2>
-        <p>La Maison de David est une association qui apporte louange et présence de Dieu dans des lieux fragilisés — foyers, quartiers, temples.</p>
-        <p>À travers la musique et l'adoration, elle offre espérance, paix et réconfort, en créant des moments de rencontre, de guérison et de lumière là où c'est le plus nécessaire.</p>
+        <span class="eyebrow" data-text="home.mission.eyebrow">Notre mission</span>
+        <h2 style="margin-top: 18px;" data-text="home.mission.title" data-rich>Nous nous réunissons avec foi pour <em>louer et prier</em> ensemble.</h2>
+        <p data-text="home.mission.p1">La Maison de David est une association qui apporte louange et présence de Dieu dans des lieux fragilisés — foyers, quartiers, temples.</p>
+        <p data-text="home.mission.p2">À travers la musique et l'adoration, elle offre espérance, paix et réconfort, en créant des moments de rencontre, de guérison et de lumière là où c'est le plus nécessaire.</p>
       </div>
       <div class="mission-pillars reveal" style="transition-delay: .2s">
         <div class="pillar">
           <span class="pillar-num">i.</span>
           <div>
-            <h4>Vivre d'amour</h4>
-            <p>Accueillir toute personne désirant vivre des moments de louange à travers ses dons artistiques.</p>
+            <h4 data-text="home.pillar1.title">Vivre d'amour</h4>
+            <p data-text="home.pillar1.text">Accueillir toute personne désirant vivre des moments de louange à travers ses dons artistiques.</p>
           </div>
         </div>
         <div class="pillar">
           <span class="pillar-num">ii.</span>
           <div>
-            <h4>Soutenir & envoyer</h4>
-            <p>Aider à développer et envoyer ceux qui veulent grandir dans leur don.</p>
+            <h4 data-text="home.pillar2.title">Soutenir & envoyer</h4>
+            <p data-text="home.pillar2.text">Aider à développer et envoyer ceux qui veulent grandir dans leur don.</p>
           </div>
         </div>
         <div class="pillar">
           <span class="pillar-num">iii.</span>
           <div>
-            <h4>Témoigner</h4>
-            <p>Une foi vivante au travers de la Parole, du chant en chorale et des concerts.</p>
+            <h4 data-text="home.pillar3.title">Témoigner</h4>
+            <p data-text="home.pillar3.text">Une foi vivante au travers de la Parole, du chant en chorale et des concerts.</p>
           </div>
         </div>
         <div class="pillar">
           <span class="pillar-num">iv.</span>
           <div>
-            <h4>Communion fraternelle</h4>
-            <p>Vivre l'unité, la simplicité, l'humilité, la vérité, l'amour et l'entraide.</p>
+            <h4 data-text="home.pillar4.title">Communion fraternelle</h4>
+            <p data-text="home.pillar4.text">Vivre l'unité, la simplicité, l'humilité, la vérité, l'amour et l'entraide.</p>
           </div>
         </div>
       </div>
@@ -1216,14 +1224,14 @@
 <section class="events" id="events">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">À venir</span>
-      <h2>Prochains rendez-vous.</h2>
-      <p>Des soirées, des cultes, des moments d'évangélisation — là où vous êtes, ou là où nous sommes envoyés.</p>
+      <span class="eyebrow" data-text="home.events.eyebrow">À venir</span>
+      <h2 data-text="home.events.title">Prochains rendez-vous.</h2>
+      <p data-text="home.events.intro">Des soirées, des cultes, des moments d'évangélisation — là où vous êtes, ou là où nous sommes envoyés.</p>
     </div>
     <div class="events-grid" id="eventsGrid">
       <!-- Cartes générées dynamiquement depuis Supabase -->
     </div>
-    <p id="eventsEmpty" class="reveal" style="display:none; text-align:center; padding: 60px 20px; font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--ink-soft);">
+    <p id="eventsEmpty" class="reveal" style="display:none; text-align:center; padding: 60px 20px; font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--ink-soft);" data-text="home.events.empty">
       Aucun événement à venir pour le moment.
     </p>
     <div style="text-align:center; margin-top:60px;" class="reveal">
@@ -1239,13 +1247,13 @@
 <section class="gallery" id="gallery">
   <div class="container">
     <div class="section-head reveal">
-      <span class="eyebrow">Galerie · Photos & Vidéos</span>
-      <h2>Des moments vécus, des visages éclairés.</h2>
-      <p>Parcourez nos archives par type d'événement. Chaque image, chaque vidéo raconte un instant partagé — une louange, une prière, une rencontre.</p>
+      <span class="eyebrow" data-text="home.gallery.eyebrow">Galerie · Photos & Vidéos</span>
+      <h2 data-text="home.gallery.title">Des moments vécus, des visages éclairés.</h2>
+      <p data-text="home.gallery.intro">Parcourez nos archives par type d'événement. Chaque image, chaque vidéo raconte un instant partagé — une louange, une prière, une rencontre.</p>
     </div>
 
     <div class="filter-bar reveal">
-      <span class="filter-label">Filtrer par</span>
+      <span class="filter-label" data-text="home.gallery.filter_label">Filtrer par</span>
       <button class="filter-btn active" data-filter="all">Tout <span class="count" data-count="all"></span></button>
       <button class="filter-btn" data-filter="evangelisation">Évangélisation <span class="count" data-count="evangelisation"></span></button>
       <button class="filter-btn" data-filter="priere">Groupe de prière <span class="count" data-count="priere"></span></button>
@@ -1264,10 +1272,10 @@
 <section class="donate-banner" id="donate">
   <div class="container">
     <div class="reveal">
-      <span class="eyebrow" style="color: var(--gold);">Soutenir l'œuvre</span>
-      <h2 style="margin-top: 24px;">Donnez avec <em>cœur.</em></h2>
-      <p>Votre don soutient la louange portée dans les lieux fragilisés, l'envoi des artistes, et l'organisation des cultes et concerts.</p>
-      <a href="don.html" class="btn btn-primary">Faire un don <span class="btn-arrow">→</span></a>
+      <span class="eyebrow" style="color: var(--gold);" data-text="home.donate.eyebrow">Soutenir l'œuvre</span>
+      <h2 style="margin-top: 24px;" data-text="home.donate.title" data-rich>Donnez avec <em>cœur.</em></h2>
+      <p data-text="home.donate.text">Votre don soutient la louange portée dans les lieux fragilisés, l'envoi des artistes, et l'organisation des cultes et concerts.</p>
+      <a href="don.html" class="btn btn-primary"><span data-text="home.donate.button">Faire un don</span> <span class="btn-arrow">→</span></a>
     </div>
   </div>
 </section>
@@ -1277,20 +1285,20 @@
   <div class="container">
     <div class="contact-grid">
       <div class="contact-info reveal">
-        <span class="eyebrow">Contact</span>
-        <h2 style="margin-top: 18px;"><em>Écrivez-nous.</em></h2>
-        <p>Pour une collaboration, un besoin, ou simplement pour discuter — nous lisons chaque message.</p>
+        <span class="eyebrow" data-text="home.contact.eyebrow">Contact</span>
+        <h2 style="margin-top: 18px;" data-text="home.contact.title" data-rich><em>Écrivez-nous.</em></h2>
+        <p data-text="home.contact.intro">Pour une collaboration, un besoin, ou simplement pour discuter — nous lisons chaque message.</p>
         <div class="contact-detail">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <div><strong>Adresse</strong><span>Genève, Suisse</span></div>
+          <div><strong data-text="home.contact.address_label">Adresse</strong><span data-text="home.contact.address">Genève, Suisse</span></div>
         </div>
         <div class="contact-detail">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <div><strong>Email</strong><span>contact@maisondedavid.com</span></div>
+          <div><strong data-text="home.contact.email_label">Email</strong><span data-text="home.contact.email">contact@maisondedavid.com</span></div>
         </div>
         <div class="contact-detail">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
-          <div><strong>Suivez-nous</strong><span>@lamaisondedavid</span></div>
+          <div><strong data-text="home.contact.social_label">Suivez-nous</strong><span data-text="home.contact.social">@lamaisondedavid</span></div>
         </div>
       </div>
 
@@ -1298,28 +1306,28 @@
         <div class="form-row">
           <div class="form-field">
             <input type="text" id="prenom" placeholder=" " required />
-            <label for="prenom">Prénom *</label>
+            <label for="prenom" data-text="home.contact.form.firstname">Prénom *</label>
           </div>
           <div class="form-field">
             <input type="text" id="nom" placeholder=" " />
-            <label for="nom">Nom</label>
+            <label for="nom" data-text="home.contact.form.lastname">Nom</label>
           </div>
         </div>
         <div class="form-row">
           <div class="form-field">
             <input type="email" id="email" placeholder=" " required />
-            <label for="email">E-mail *</label>
+            <label for="email" data-text="home.contact.form.email">E-mail *</label>
           </div>
           <div class="form-field">
             <input type="tel" id="tel" placeholder=" " />
-            <label for="tel">Numéro</label>
+            <label for="tel" data-text="home.contact.form.phone">Numéro</label>
           </div>
         </div>
         <div class="form-field">
           <textarea id="msg" placeholder=" " required></textarea>
-          <label for="msg">Message *</label>
+          <label for="msg" data-text="home.contact.form.message">Message *</label>
         </div>
-        <button type="submit" class="btn btn-primary">Envoyer le message <span class="btn-arrow">→</span></button>
+        <button type="submit" class="btn btn-primary"><span data-text="home.contact.form.submit">Envoyer le message</span> <span class="btn-arrow">→</span></button>
       </form>
     </div>
   </div>
@@ -1330,43 +1338,46 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <h3>La Maison de David</h3>
-        <p>Apporter louange et présence de Dieu dans les lieux fragilisés — par la musique, l'adoration et la prière.</p>
+        <h3 data-text="common.brand">La Maison de David</h3>
+        <p data-text="common.footer.about">Apporter louange et présence de Dieu dans les lieux fragilisés — par la musique, l'adoration et la prière.</p>
       </div>
       <div>
-        <h5>Site</h5>
+        <h5 data-text="common.footer.col_site">Site</h5>
         <ul>
-          <li><a href="#mission">À propos</a></li>
-          <li><a href="#gallery">Galerie</a></li>
-          <li><a href="#events">Événements</a></li>
-          <li><a href="don.html">Faire un don</a></li>
+          <li><a href="#mission" data-text="common.nav.about">À propos</a></li>
+          <li><a href="#gallery" data-text="common.nav.gallery">Galerie</a></li>
+          <li><a href="#events" data-text="common.nav.events">Événements</a></li>
+          <li><a href="don.html" data-text="common.nav.donate">Faire un don</a></li>
         </ul>
       </div>
       <div>
-        <h5>Événements</h5>
+        <h5 data-text="common.footer.col_events">Événements</h5>
         <ul>
-          <li><a href="#">Évangélisation</a></li>
-          <li><a href="#">Groupe de prière</a></li>
-          <li><a href="#">Culte protestant</a></li>
-          <li><a href="#">Gospel Night</a></li>
-          <li><a href="#">Atelier Gospel</a></li>
+          <li><a href="#" data-text="common.footer.ev1">Évangélisation</a></li>
+          <li><a href="#" data-text="common.footer.ev2">Groupe de prière</a></li>
+          <li><a href="#" data-text="common.footer.ev3">Culte protestant</a></li>
+          <li><a href="#" data-text="common.footer.ev4">Gospel Night</a></li>
+          <li><a href="#" data-text="common.footer.ev5">Atelier Gospel</a></li>
         </ul>
       </div>
       <div>
-        <h5>Légal</h5>
+        <h5 data-text="common.footer.col_legal">Légal</h5>
         <ul>
-          <li><a href="#">Politique de confidentialité</a></li>
-          <li><a href="#">Conditions d'utilisation</a></li>
-          <li><a href="#">Accessibilité</a></li>
+          <li><a href="#" data-text="common.footer.legal1">Politique de confidentialité</a></li>
+          <li><a href="#" data-text="common.footer.legal2">Conditions d'utilisation</a></li>
+          <li><a href="#" data-text="common.footer.legal3">Accessibilité</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bot">
-      <span>© 2026 La Maison de David · Genève, Suisse</span>
-      <span>Conçu avec foi.</span>
+      <span data-text="common.footer.copyright">© 2026 La Maison de David · Genève, Suisse</span>
+      <span data-text="common.footer.signature">Conçu avec foi.</span>
     </div>
   </div>
 </footer>
+
+<!-- Textes modifiables depuis le dashboard (voir site-texts.js) -->
+<script src="site-texts.js" defer></script>
 
 <!-- ============ LIGHTBOX ============ -->
 <div class="lightbox" id="lightbox">
@@ -1409,8 +1420,12 @@
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
             <circle cx="12" cy="10" r="3"/>
           </svg>
-          <div id="emLocation"></div>
+          <a id="emLocation" class="event-modal-map" href="#" target="_blank" rel="noopener noreferrer"></a>
         </div>
+      </div>
+      <div class="event-modal-actions">
+        <a id="emIcs" class="btn btn-primary" href="#"><span data-text="home.events.add_calendar">Ajouter au calendrier</span></a>
+        <a id="emGcal" class="btn btn-ghost" href="#" target="_blank" rel="noopener noreferrer"><span data-text="home.events.google_calendar">Google Agenda</span></a>
       </div>
       <div class="event-modal-desc" id="emDesc"></div>
     </div>
@@ -1468,7 +1483,7 @@
       }
       el.innerHTML = `
         <img src="${item.img}" alt="${item.title}"
-             onerror="this.style.display='none'; this.parentElement.style.background='${gradients[item.cat] || gradients.evangelisation}';" />
+             onerror="this.style.display='none'; this.parentElement.classList.add('no-img'); this.parentElement.style.background='${gradients[item.cat] || gradients.evangelisation}';" />
         ${item.type === 'video' ? `
           <div class="play-icon">
             <svg viewBox="0 0 12 14"><path d="M0 0v14l12-7z"/></svg>
@@ -1594,6 +1609,66 @@
     return `${day} ${num} ${month} ${year} à ${h}h${m}`;
   }
 
+  /* ---- Carte & calendrier ---- */
+  const IS_APPLE = /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document;
+  const EVENT_DURATION_MS = 2 * 60 * 60 * 1000; // pas d'heure de fin en base : 2 h par défaut
+  const emIcs = document.getElementById('emIcs');
+  const emGcal = document.getElementById('emGcal');
+
+  // iPhone/iPad → Plans d'Apple ; ailleurs → Google Maps.
+  function mapUrl(address) {
+    const q = encodeURIComponent(address);
+    return IS_APPLE
+      ? `https://maps.apple.com/?q=${q}`
+      : `https://www.google.com/maps/search/?api=1&query=${q}`;
+  }
+
+  function toCalDate(d) {
+    return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  }
+
+  function icsEscape(s) {
+    return String(s || '').replace(/\\/g, '\\\\').replace(/([,;])/g, '\\$1').replace(/\r?\n/g, '\\n');
+  }
+
+  function setCalendarLinks(event) {
+    const start = new Date(event.date);
+    const end = new Date(start.getTime() + EVENT_DURATION_MS);
+    const title = event.title || 'La Maison de David';
+    const details = [event.description, location.origin].filter(Boolean).join('\n\n');
+
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//La Maison de David//Evenements//FR',
+      'BEGIN:VEVENT',
+      `UID:${event.id || start.getTime()}@maisondedavid`,
+      `DTSTAMP:${toCalDate(new Date())}`,
+      `DTSTART:${toCalDate(start)}`,
+      `DTEND:${toCalDate(end)}`,
+      `SUMMARY:${icsEscape(title)}`,
+      event.location ? `LOCATION:${icsEscape(event.location)}` : '',
+      `DESCRIPTION:${icsEscape(details)}`,
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].filter(Boolean).join('\r\n');
+
+    emIcs.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+    // Sur iPhone, ouvrir le fichier propose directement « Ajouter au calendrier ».
+    // Ailleurs, on le télécharge (Outlook, Calendrier Mac, etc. l'ouvrent).
+    if (IS_APPLE) emIcs.removeAttribute('download');
+    else emIcs.setAttribute('download', (title.replace(/[^\w\u00C0-\u017F -]/g, '').trim() || 'evenement') + '.ics');
+
+    const g = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: title,
+      dates: `${toCalDate(start)}/${toCalDate(end)}`,
+      details,
+      location: event.location || '',
+    });
+    emGcal.href = `https://calendar.google.com/calendar/render?${g}`;
+  }
+
   function openEventModal(event) {
     if (event.flyer_url) {
       emFlyer.src = event.flyer_url;
@@ -1610,11 +1685,13 @@
     emDate.textContent = formatEventDateLong(new Date(event.date));
     if (event.location) {
       emLocation.textContent = event.location;
+      emLocation.href = mapUrl(event.location);
       emLocationWrap.style.display = 'flex';
     } else {
       emLocationWrap.style.display = 'none';
     }
     emDesc.textContent = event.description || '';
+    setCalendarLinks(event);
     eventModal.classList.add('open');
     eventModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
