@@ -47,7 +47,7 @@ export function UsersManager({ users, currentUserEmail }: Props) {
           <thead>
             <tr className="border-b border-line text-[10px] font-semibold uppercase tracking-[0.2em] text-gold-deep">
               <th className="px-5 py-4 font-semibold">Email</th>
-              <th className="px-5 py-4 font-semibold">Rôle</th>
+              <th className="hidden px-5 py-4 font-semibold sm:table-cell">Rôle</th>
               <th className="hidden px-5 py-4 font-semibold sm:table-cell">Ajouté le</th>
               <th className="px-5 py-4 text-right font-semibold">Actions</th>
             </tr>
@@ -64,14 +64,18 @@ export function UsersManager({ users, currentUserEmail }: Props) {
                 const isSelf = u.email.toLowerCase() === currentUserEmail.toLowerCase();
                 return (
                   <tr key={u.email} className="border-b border-line/60 last:border-0">
-                    <td className="px-5 py-4">
+                    <td className="max-w-0 px-4 py-4 sm:max-w-none sm:px-5">
                       <div className="flex items-center gap-3">
                         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink text-[11px] font-semibold uppercase text-cream">
                           {u.email.slice(0, 1)}
                         </span>
                         <div className="min-w-0">
                           <p className="truncate text-ink">{u.email}</p>
-                          <div className="mt-0.5 flex items-center gap-2">
+                          <div className="mt-0.5 flex flex-wrap items-center gap-2">
+                            {/* Sur mobile, le rôle s'affiche ici (colonne masquée). */}
+                            <span className="text-[10px] font-semibold uppercase tracking-widest text-ink-soft sm:hidden">
+                              {ROLE_LABEL[u.role]}
+                            </span>
                             {isSelf && (
                               <span className="text-[10px] font-semibold uppercase tracking-widest text-gold-deep">
                                 Vous
@@ -86,12 +90,14 @@ export function UsersManager({ users, currentUserEmail }: Props) {
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-4">
+                    <td className="hidden px-5 py-4 sm:table-cell">
                       <span
                         className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest ${
                           u.role === "admin"
                             ? "bg-gold/15 text-gold-deep"
-                            : "bg-ink/8 text-ink-soft"
+                            : u.role === "editor"
+                              ? "bg-ink/8 text-ink"
+                              : "bg-ink/5 text-ink-soft"
                         }`}
                       >
                         {ROLE_LABEL[u.role]}
@@ -100,8 +106,8 @@ export function UsersManager({ users, currentUserEmail }: Props) {
                     <td className="hidden px-5 py-4 text-ink-soft sm:table-cell">
                       {formatDate(u.created_at)}
                     </td>
-                    <td className="px-5 py-4">
-                      <div className="flex items-center justify-end gap-2">
+                    <td className="px-4 py-4 sm:px-5">
+                      <div className="flex flex-col items-stretch justify-end gap-2 sm:flex-row sm:items-center">
                         <button
                           type="button"
                           onClick={() => setPwUser(u)}

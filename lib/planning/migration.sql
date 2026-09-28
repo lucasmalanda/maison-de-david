@@ -148,3 +148,26 @@ create index if not exists event_signups_event_idx
 
 -- RLS sans policy : tout passe par les Server Actions.
 alter table public.event_signups enable row level security;
+
+-- ============================================
+-- TEXTES DU SITE — modifiés depuis le dashboard
+-- ============================================
+
+-- 6. Seuls les textes MODIFIÉS sont stockés ici. Sans ligne,
+--    le site affiche le texte d'origine écrit dans le HTML.
+create table if not exists public.site_texts (
+  key         text primary key,
+  value       text not null,
+  updated_at  timestamptz not null default now(),
+  updated_by  text
+);
+
+alter table public.site_texts enable row level security;
+
+-- Lecture publique (le site la lit avec la clé publishable).
+-- Les écritures passent par les Server Actions (clé secrète).
+drop policy if exists "site_texts_read_public" on public.site_texts;
+create policy "site_texts_read_public"
+  on public.site_texts for select
+  to anon, authenticated
+  using (true);
