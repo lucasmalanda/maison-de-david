@@ -17,6 +17,7 @@ export type AllowedUser = {
  * dans allowed_emails. Retourne null si non connecté ou non autorisé.
  */
 export async function getCurrentUser(): Promise<{
+  id: string;
   email: string;
   role: UserRole | null;
 } | null> {
@@ -35,6 +36,7 @@ export async function getCurrentUser(): Promise<{
     .maybeSingle();
 
   return {
+    id: user.id,
     email: user.email,
     role: (data?.role as UserRole | undefined) ?? null,
   };

@@ -37,14 +37,14 @@ const createSchema = z.object({
  * ou une erreur si l'appelant n'est pas admin.
  */
 async function requireAdmin(): Promise<
-  { ok: true; email: string } | { ok: false; error: string }
+  { ok: true; id: string; email: string } | { ok: false; error: string }
 > {
   const me = await getCurrentUser();
   if (!me) return { ok: false, error: "Non authentifié" };
   if (me.role !== "admin") {
     return { ok: false, error: "Accès réservé aux administrateurs" };
   }
-  return { ok: true, email: me.email };
+  return { ok: true, id: me.id, email: me.email };
 }
 
 /** Retrouve l'id d'un compte auth à partir de son email (insensible à la casse). */
@@ -107,7 +107,8 @@ export async function createUser(formData: FormData): Promise<ActionResult> {
   const { error: upsertError } = await admin
     .from("allowed_emails")
     .upsert(
-      { email, role, invited_by: guard.email },
+      // En base, invited_by est l'uuid de l'admin (l'email va dans invited_by_email).
+      { email, role, invited_by: guard.id, invited_by_email: guard.email },
       { onConflict: "email" },
     );
 
