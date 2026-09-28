@@ -28,6 +28,16 @@ const NAV: NavItem[] = [
     ),
   },
   {
+    href: "/dashboard/planning",
+    label: "Planning",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
+        <rect x="3" y="5" width="18" height="16" rx="2" />
+        <path d="M3 9h18M8 3v4M16 3v4M8.5 15l2.5 2.5 4.5-5" />
+      </svg>
+    ),
+  },
+  {
     href: "/dashboard/evenements",
     label: "Événements",
     roles: ["admin", "editor"],

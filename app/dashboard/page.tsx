@@ -139,17 +139,17 @@ export default async function DashboardHome() {
               Prochains rendez-vous
             </h2>
           </div>
-          <a
-            href="/dashboard/evenements"
+          <Link
+            href="/dashboard/planning"
             className="text-[11px] font-semibold uppercase tracking-widest text-gold-deep underline-offset-4 hover:underline"
           >
-            Tout voir →
-          </a>
+            Planning →
+          </Link>
         </div>
         <p className="mt-6 max-w-md text-sm text-ink-soft">
           {eventsUpcomingRes.count
-            ? "Liste à venir à l'étape 5."
-            : "Aucun événement à venir pour l'instant. Tu pourras en créer à l'étape 5."}
+            ? "Ouvre le planning pour dire si tu sers et voir qui est déjà inscrit."
+            : "Aucun événement à venir pour l'instant."}
         </p>
       </section>
     </div>

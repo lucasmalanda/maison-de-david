@@ -23,3 +23,15 @@ export const serviceProfileSchema = z.object({
 });
 
 export type ServiceProfileInput = z.infer<typeof serviceProfileSchema>;
+
+export const signupSchema = z.object({
+  event_id: z.string().uuid("Événement invalide"),
+  status: z.enum(["yes", "maybe", "no"]),
+  services: z.array(z.enum(SERVICE_KEYS)),
+  note: z
+    .string()
+    .trim()
+    .max(300, "La remarque est trop longue (max 300 caractères)"),
+});
+
+export type SignupInput = z.infer<typeof signupSchema>;

@@ -122,3 +122,29 @@ create table if not exists public.service_profiles (
 -- RLS sans policy : aucun accès côté client. Tout passe par
 -- les Server Actions (clé secrète) qui vérifient l'utilisateur.
 alter table public.service_profiles enable row level security;
+
+-- ============================================
+-- PLANNING (étape 2) — Inscriptions pour servir
+-- ============================================
+
+-- 5. Une réponse par membre et par événement :
+--    disponible / peut-être / pas dispo + services choisis.
+create table if not exists public.event_signups (
+  id          uuid primary key default gen_random_uuid(),
+  event_id    uuid not null references public.events (id) on delete cascade,
+  email       text not null
+              references public.allowed_emails (email)
+              on delete cascade on update cascade,
+  status      text not null check (status in ('yes', 'maybe', 'no')),
+  services    text[] not null default '{}',
+  note        text,
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now(),
+  unique (event_id, email)
+);
+
+create index if not exists event_signups_event_idx
+  on public.event_signups (event_id);
+
+-- RLS sans policy : tout passe par les Server Actions.
+alter table public.event_signups enable row level security;
