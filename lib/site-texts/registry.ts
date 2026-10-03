@@ -133,6 +133,28 @@ export const SITE_TEXT_SECTIONS: SiteTextSection[] = [
     ],
   },
   {
+    id: "categories",
+    title: "Catégories",
+    description: "Noms affichés dans les filtres de la galerie, sur les photos et dans le détail d'un événement.",
+    fields: [
+      { key: "category.all", label: "Filtre « toutes les catégories »", kind: "line", default: "Tout" },
+      { key: "category.evangelisation", label: "Évangélisation", kind: "line", default: "Évangélisation" },
+      { key: "category.priere", label: "Groupe de prière", kind: "line", default: "Groupe de prière" },
+      { key: "category.culte", label: "Culte protestant", kind: "line", default: "Culte protestant" },
+      { key: "category.gospel_night", label: "Gospel Night", kind: "line", default: "Gospel Night" },
+      { key: "category.atelier", label: "Atelier Gospel", kind: "line", default: "Atelier Gospel" },
+    ],
+  },
+  {
+    id: "tabs",
+    title: "Titres des onglets",
+    description: "Le nom affiché dans l'onglet du navigateur.",
+    fields: [
+      { key: "home.tab_title", label: "Page d'accueil", kind: "line", default: "La Maison de David — Genève" },
+      { key: "don.tab_title", label: "Page Don", kind: "line", default: "Faire un don — La Maison de David" },
+    ],
+  },
+  {
     id: "common",
     title: "Menu & pied de page",
     description: "Communs aux deux pages du site.",

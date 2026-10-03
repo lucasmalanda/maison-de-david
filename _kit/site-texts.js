@@ -52,6 +52,9 @@
       const texts = {};
       (rows || []).forEach(function (r) { texts[r.key] = r.value; });
       apply(texts);
+      // Pour les textes affichés par le JavaScript de la page (ex. catégories)
+      window.SITE_TEXTS = texts;
+      window.dispatchEvent(new Event('site-texts:loaded'));
     })
     .catch(function (err) {
       console.warn('[site-texts] textes d\'origine conservés :', err);

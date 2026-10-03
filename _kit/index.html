@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>La Maison de David — Genève</title>
+<title data-text="home.tab_title">La Maison de David — Genève</title>
 <meta name="description" content="Association chrétienne basée à Genève. Louange, prière et présence de Dieu en chaque lieu fragilisé." />
 
 <!-- Fonts -->
@@ -1254,12 +1254,12 @@
 
     <div class="filter-bar reveal">
       <span class="filter-label" data-text="home.gallery.filter_label">Filtrer par</span>
-      <button class="filter-btn active" data-filter="all">Tout <span class="count" data-count="all"></span></button>
-      <button class="filter-btn" data-filter="evangelisation">Évangélisation <span class="count" data-count="evangelisation"></span></button>
-      <button class="filter-btn" data-filter="priere">Groupe de prière <span class="count" data-count="priere"></span></button>
-      <button class="filter-btn" data-filter="culte">Culte protestant <span class="count" data-count="culte"></span></button>
-      <button class="filter-btn" data-filter="gospel-night">Gospel Night <span class="count" data-count="gospel-night"></span></button>
-      <button class="filter-btn" data-filter="atelier">Atelier Gospel <span class="count" data-count="atelier"></span></button>
+      <button class="filter-btn active" data-filter="all"><span data-text="category.all">Tout</span> <span class="count" data-count="all"></span></button>
+      <button class="filter-btn" data-filter="evangelisation"><span data-text="category.evangelisation">Évangélisation</span> <span class="count" data-count="evangelisation"></span></button>
+      <button class="filter-btn" data-filter="priere"><span data-text="category.priere">Groupe de prière</span> <span class="count" data-count="priere"></span></button>
+      <button class="filter-btn" data-filter="culte"><span data-text="category.culte">Culte protestant</span> <span class="count" data-count="culte"></span></button>
+      <button class="filter-btn" data-filter="gospel-night"><span data-text="category.gospel_night">Gospel Night</span> <span class="count" data-count="gospel-night"></span></button>
+      <button class="filter-btn" data-filter="atelier"><span data-text="category.atelier">Atelier Gospel</span> <span class="count" data-count="atelier"></span></button>
     </div>
 
     <div class="gallery-grid" id="galleryGrid">
@@ -1449,6 +1449,13 @@
     atelier:        'Atelier Gospel'
   };
 
+  // Nom d'une catégorie : version modifiée dans le dashboard (site-texts.js)
+  // si elle existe, sinon le nom ci-dessus.
+  function categoryLabel(cat) {
+    const custom = window.SITE_TEXTS && window.SITE_TEXTS['category.' + String(cat).replace(/-/g, '_')];
+    return custom || CATEGORY_LABELS[cat] || cat || '';
+  }
+
   // Gradients de fallback si une image ne charge pas
   const gradients = {
     evangelisation: 'linear-gradient(135deg, #b8924a, #6b2424)',
@@ -1489,7 +1496,7 @@
             <svg viewBox="0 0 12 14"><path d="M0 0v14l12-7z"/></svg>
           </div>` : ''}
         <div class="item-overlay">
-          <span class="item-cat">${item.catLabel}</span>
+          <span class="item-cat">${categoryLabel(item.cat)}</span>
           <span class="item-title">${item.title || ''}</span>
         </div>
       `;
@@ -1569,7 +1576,7 @@
   function openLightbox(item) {
     lbImg.src = item.img;
     lbImg.alt = item.title;
-    lbCat.textContent = item.catLabel + (item.type === 'video' ? ' · Vidéo' : ' · Photo');
+    lbCat.textContent = categoryLabel(item.cat) + (item.type === 'video' ? ' · Vidéo' : ' · Photo');
     lbTitle.textContent = item.title;
     lb.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -1678,7 +1685,7 @@
       emFlyer.removeAttribute('src');
       eventModal.classList.add('no-flyer');
     }
-    const catLabel = CATEGORY_LABELS[event.category] || event.category || '';
+    const catLabel = categoryLabel(event.category);
     emCat.textContent = catLabel;
     emCat.style.display = catLabel ? 'inline-block' : 'none';
     emTitle.textContent = event.title || '';
@@ -1726,6 +1733,12 @@
   }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
 
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Les textes du dashboard arrivent parfois après la galerie : on la
+  // réaffiche pour mettre à jour les noms de catégories.
+  window.addEventListener('site-texts:loaded', () => {
+    if (galleryItems.length) renderGallery(galleryItems);
+  });
 
   /* ============================
      SUPABASE : chargement des données réelles
@@ -1809,7 +1822,6 @@
       // Gallery
       galleryItems = (mediaRes.data || []).map(m => ({
         cat: m.category,
-        catLabel: CATEGORY_LABELS[m.category] || m.category,
         title: m.title || '',
         size: m.size_hint || 'square',
         type: m.type || 'photo',
