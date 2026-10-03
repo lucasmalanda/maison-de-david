@@ -37,7 +37,7 @@ export type Signup = {
   note: string | null;
   /** Nom affiché : prénom/nom du profil, sinon début de l'email. */
   name: string;
-  /** Instruments du profil (utile quand « Musique » est choisi). */
+  /** Instruments du profil (utile quand « Instruments » est choisi). */
   instruments: InstrumentKey[];
 };
 

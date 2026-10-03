@@ -2,7 +2,7 @@
 // dans les disponibilités). Les clés sont stockées en base.
 export const SERVICES = [
   { key: "chant", label: "Chant" },
-  { key: "musique", label: "Musique" },
+  { key: "musique", label: "Instruments" },
   { key: "son", label: "Son & lumière" },
   { key: "video", label: "Vidéo / projection" },
   { key: "accueil", label: "Accueil" },

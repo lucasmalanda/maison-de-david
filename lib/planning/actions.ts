@@ -29,7 +29,7 @@ export async function saveMyServiceProfile(
   }
 
   const p = parsed.data;
-  // Pas d'instrument si « Musique » n'est pas coché.
+  // Pas d'instrument si « Instruments » n'est pas coché.
   const instruments = p.services.includes("musique") ? p.instruments : [];
 
   const admin = createAdminClient();

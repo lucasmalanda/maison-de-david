@@ -229,7 +229,7 @@ export function PlanningEventCard({ event, myEmail, defaultServices }: Props) {
   );
 }
 
-/** Compteur par poste : « Chant 2 · Musique 1 · Son & lumière 0 ». */
+/** Compteur par poste : « Chant 2 · Instruments 1 · Son & lumière 0 ». */
 function TeamSummary({ serving }: { serving: Signup[] }) {
   const counts = SERVICES.map((s) => ({
     ...s,
