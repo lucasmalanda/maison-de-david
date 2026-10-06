@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    { "source": "/login", "destination": "https://maison-de-david.vercel.app/login" },
+    { "source": "/dashboard", "destination": "https://maison-de-david.vercel.app/dashboard" },
+    { "source": "/dashboard/:path*", "destination": "https://maison-de-david.vercel.app/dashboard/:path*" },
+    { "source": "/auth/:path*", "destination": "https://maison-de-david.vercel.app/auth/:path*" },
+    { "source": "/_next/:path*", "destination": "https://maison-de-david.vercel.app/_next/:path*" }
+  ]
+}
